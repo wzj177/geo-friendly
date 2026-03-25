@@ -1,22 +1,12 @@
 // VitePress Configuration
-const fs = require('fs');
-const yaml = require('js-yaml');
-
-// Load Geo-Friendly config
-const geoConfig = yaml.load(
-  fs.readFileSync(__dirname + '/../../../geofriendly.yaml', 'utf8')
-);
-
 module.exports = {
-  title: geoConfig.title || 'My Documentation',
-  description: geoConfig.description || 'Technical Documentation',
+  title: 'My VitePress Documentation',
+  description: 'Technical documentation built with VitePress',
+
   base: '/',
 
-  // Content directory
-  srcDir: '../../content/docs',
-
-  // Output directory
-  outDir: '../../config/docs/dist',
+  // Ignore dead links for external URLs
+  ignoreDeadLinks: true,
 
   // VitePress config
   markdown: {
@@ -51,14 +41,10 @@ module.exports = {
       { icon: 'github', link: 'https://github.com/yourusername/repo' }
     ],
 
-    search: {
-      provider: 'algolia',
-      options: {
-        appId: 'YOUR_APP_ID',
-        apiKey: 'YOUR_API_KEY',
-        indexName: 'INDEX_NAME'
-      }
-    }
+    // Disable search for this example (requires Algolia credentials)
+    // search: {
+    //   provider: 'algolia'
+    // }
   },
 
   locales: {

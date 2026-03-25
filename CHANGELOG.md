@@ -97,5 +97,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Security audit workflow in CI
 - Vulnerability reporting process
 
-[Unreleased]: https://github.com/geo-friendly/geo-friendly/compare/v1.0.0...HEAD
-[1.0.0]: https://github.com/geo-friendly/geo-friendly/releases/tag/v1.0.0
+[Unreleased]: https://github.com/wzj177/geo-friendly/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/wzj177/geo-friendly/releases/tag/v1.0.0

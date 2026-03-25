@@ -25,6 +25,18 @@ class ReportCommand extends Command
     private const DESCRIPTION = 'Generate a comprehensive GEO report with citability scores and optimization hints';
 
     /**
+     * Polyfill for str_contains() for PHP 7.4 compatibility.
+     *
+     * @param string $haystack The string to search in
+     * @param string $needle The substring to search for
+     * @return bool True if haystack contains needle
+     */
+    private function strContains(string $haystack, string $needle): bool
+    {
+        return strpos($haystack, $needle) !== false;
+    }
+
+    /**
      * Platform-specific optimization hints
      *
      * @var array<string, array{priority: string, hints: array<string>}>
@@ -324,7 +336,7 @@ class ReportCommand extends Command
 
         // Check if hint mentions a missing file
         foreach ($missingFiles as $file) {
-            if (str_contains(strtolower($hint), str_replace(['.json', '.txt'], '', strtolower($file)))) {
+            if ($this->strContains(strtolower($hint), str_replace(['.json', '.txt'], '', strtolower($file)))) {
                 return true;
             }
         }
@@ -332,7 +344,7 @@ class ReportCommand extends Command
         // Include general hints
         $generalKeywords = ['schema', 'structure', 'format', 'metadata', 'optimize', 'ensure'];
         foreach ($generalKeywords as $keyword) {
-            if (str_contains(strtolower($hint), $keyword)) {
+            if ($this->strContains(strtolower($hint), $keyword)) {
                 return true;
             }
         }

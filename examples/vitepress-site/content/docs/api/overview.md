@@ -47,4 +47,4 @@ $geo = new GeoFriendly($config);
 
 ## 更多信息
 
-查看 [API 参考](/api/reference) 了解详细信息。
+查看 [快速开始](/getting-started) 了解如何使用。

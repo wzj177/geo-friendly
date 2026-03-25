@@ -16,4 +16,4 @@ This is a VitePress documentation site with Geo-Friendly integration.
 
 ## Getting Started
 
-Check out the [Guide](/guide/) to get started with the documentation.
+Check out the [Getting Started](/getting-started) guide to learn more.

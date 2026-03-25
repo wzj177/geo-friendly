@@ -54,7 +54,7 @@ cd wordpress-geo
 ### 2. 安装依赖
 
 ```bash
-composer require geo-friendly/geo-friendly
+composer require wzj177/geo-friendly
 ```
 
 ### 3. 配置环境变量

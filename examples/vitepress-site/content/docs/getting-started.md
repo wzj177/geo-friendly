@@ -38,5 +38,4 @@ npm run geo:generate
 
 ## 下一步
 
-- 查看 [配置指南](/guide/configuration)
-- 了解 [API 参考](/api/overview)
+- 查看 [API 概览](/api/overview)

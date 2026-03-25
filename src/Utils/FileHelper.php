@@ -30,6 +30,22 @@ class FileHelper
     ];
 
     /**
+     * Polyfill for str_ends_with() for PHP 7.4 compatibility.
+     *
+     * @param string $haystack The string to search in
+     * @param string $needle The substring to search for
+     * @return bool True if haystack ends with needle
+     */
+    private static function strEndsWith(string $haystack, string $needle): bool
+    {
+        $length = strlen($needle);
+        if ($length === 0) {
+            return true;
+        }
+        return substr($haystack, -$length) === $needle;
+    }
+
+    /**
      * Recursively collect markdown files from a directory.
      *
      * @param string $dir The directory to scan
@@ -42,22 +58,29 @@ class FileHelper
         }
 
         $files = [];
+
+        // Use RecursiveCallbackFilterIterator to filter directories
+        $directoryIterator = new \RecursiveDirectoryIterator($dir, \RecursiveDirectoryIterator::SKIP_DOTS);
+        $filterIterator = new \RecursiveCallbackFilterIterator($directoryIterator, function ($current, $key, $iterator) {
+            // Skip specified directories
+            if ($current->isDir() && in_array($current->getFilename(), self::SKIP_DIRS, true)) {
+                return false;
+            }
+            return true;
+        });
+
         $iterator = new \RecursiveIteratorIterator(
-            new \RecursiveDirectoryIterator($dir, \RecursiveDirectoryIterator::SKIP_DOTS),
+            $filterIterator,
             \RecursiveIteratorIterator::SELF_FIRST
         );
 
         foreach ($iterator as $file) {
             if ($file->isDir()) {
-                // Skip specified directories
-                if (in_array($file->getFilename(), self::SKIP_DIRS, true)) {
-                    $iterator->skipNext();
-                }
                 continue;
             }
 
             $filename = $file->getFilename();
-            if (!str_ends_with($filename, '.md') && !str_ends_with($filename, '.mdx')) {
+            if (!self::strEndsWith($filename, '.md') && !self::strEndsWith($filename, '.mdx')) {
                 continue;
             }
 

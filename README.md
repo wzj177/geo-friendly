@@ -1,9 +1,9 @@
 # Geo-Friendly
 
-[![Latest Stable Version](https://img.shields.io/packagist/v/geo-friendly/geo-friendly)](https://packagist.org/packages/geo-friendly/geo-friendly)
-[![Total Downloads](https://img.shields.io/packagist/dt/geo-friendly/geo-friendly)](https://packagist.org/packages/geo-friendly/geo-friendly)
-[![License](https://img.shields.io/packagist/l/geo-friendly/geo-friendly)](https://packagist.org/packages/geo-friendly/geo-friendly)
-[![PHP Version](https://img.shields.io/php/v/geo-friendly/geo-friendly)](https://packagist.org/packages/geo-friendly/geo-friendly)
+[![Latest Stable Version](https://img.shields.io/packagist/v/wzj177/geo-friendly)](https://packagist.org/packages/wzj177/geo-friendly)
+[![Total Downloads](https://img.shields.io/packagist/dt/wzj177/geo-friendly)](https://packagist.org/packages/wzj177/geo-friendly)
+[![License](https://img.shields.io/packagist/l/wzj177/geo-friendly)](https://packagist.org/packages/wzj177/geo-friendly)
+[![PHP Version](https://img.shields.io/php/v/wzj177/geo-friendly)](https://packagist.org/packages/wzj177/geo-friendly)
 
 Generative Engine Optimization (GEO) for PHP - Make your website discoverable by AI answer engines like ChatGPT, Claude, and Perplexity.
 
@@ -41,7 +41,7 @@ Generative Engine Optimization (GEO) is the next evolution of SEO, focusing on m
 Install the package via Composer:
 
 ```bash
-composer require geo-friendly/geo-friendly
+composer require wzj177/geo-friendly
 ```
 
 Or add it to your `composer.json`:
@@ -49,7 +49,7 @@ Or add it to your `composer.json`:
 ```json
 {
     "require": {
-        "geo-friendly/geo-friendly": "^1.0"
+        "wzj177/geo-friendly": "^1.0"
     }
 }
 ```
@@ -361,7 +361,7 @@ A complete Laravel integration package is also available:
 
 ```bash
 # Install the Laravel service provider
-composer require geo-friendly/geo-friendly
+composer require wzj177/geo-friendly
 php artisan vendor:publish --provider="GeoFriendly\Laravel\GeoFriendlyServiceProvider"
 ```
 
@@ -509,7 +509,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ```bash
 # Clone the repository
-git clone https://github.com/geo-friendly/geo-friendly.git
+git clone https://github.com/wzj177/geo-friendly.git
 cd geo-friendly
 
 # Install dependencies
@@ -528,14 +528,14 @@ This package is open-sourced software licensed under the [MIT license](LICENSE.m
 
 ## Credits
 
-- [Geo-Friendly Contributors](https://github.com/geo-friendly/geo-friendly/graphs/contributors)
+- [Geo-Friendly Contributors](https://github.com/wzj177/geo-friendly/graphs/contributors)
 - Built with inspiration from the GEO community
 
 ## Support
 
-- **Documentation**: [Full Documentation](https://github.com/geo-friendly/geo-friendly/docs)
-- **Issues**: [GitHub Issues](https://github.com/geo-friendly/geo-friendly/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/geo-friendly/geo-friendly/discussions)
+- **Documentation**: [Full Documentation](https://github.com/wzj177/geo-friendly/docs)
+- **Issues**: [GitHub Issues](https://github.com/wzj177/geo-friendly/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/wzj177/geo-friendly/discussions)
 - **Platform Examples**: [examples/](examples/) directory
 
 ## Related Resources

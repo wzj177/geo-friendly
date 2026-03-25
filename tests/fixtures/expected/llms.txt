@@ -64,7 +64,7 @@ Welcome to our comprehensive documentation.
 ## Installation
 
 ```bash
-composer require geo-friendly/geo-friendly
+composer require wzj177/geo-friendly
 ```
 
 ## Configuration

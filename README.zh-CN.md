@@ -1,9 +1,9 @@
 # Geo-Friendly
 
-[![Latest Stable Version](https://img.shields.io/packagist/v/geo-friendly/geo-friendly)](https://packagist.org/packages/geo-friendly/geo-friendly)
-[![Total Downloads](https://img.shields.io/packagist/dt/geo-friendly/geo-friendly)](https://packagist.org/packages/geo-friendly/geo-friendly)
-[![License](https://img.shields.io/packagist/l/geo-friendly/geo-friendly)](https://packagist.org/packages/geo-friendly/geo-friendly)
-[![PHP Version](https://img.shields.io/php/v/geo-friendly/geo-friendly)](https://packagist.org/packages/geo-friendly/geo-friendly)
+[![Latest Stable Version](https://img.shields.io/packagist/v/wzj177/geo-friendly)](https://packagist.org/packages/wzj177/geo-friendly)
+[![Total Downloads](https://img.shields.io/packagist/dt/wzj177/geo-friendly)](https://packagist.org/packages/wzj177/geo-friendly)
+[![License](https://img.shields.io/packagist/l/wzj177/geo-friendly)](https://packagist.org/packages/wzj177/geo-friendly)
+[![PHP Version](https://img.shields.io/php/v/wzj177/geo-friendly)](https://packagist.org/packages/wzj177/geo-friendly)
 
 PHP 生成式引擎优化（GEO）- 让您的网站可被 ChatGPT、Claude 和 Perplexity 等 AI 答案引擎发现。
 
@@ -41,7 +41,7 @@ English | [简体中文](README.zh-CN.md)
 通过 Composer 安装：
 
 ```bash
-composer require geo-friendly/geo-friendly
+composer require wzj177/geo-friendly
 ```
 
 或添加到您的 `composer.json`：
@@ -49,7 +49,7 @@ composer require geo-friendly/geo-friendly
 ```json
 {
     "require": {
-        "geo-friendly/geo-friendly": "^1.0"
+        "wzj177/geo-friendly": "^1.0"
     }
 }
 ```
@@ -361,7 +361,7 @@ class GenerateGeoCommand extends Command
 
 ```bash
 # 安装 Laravel 服务提供者
-composer require geo-friendly/geo-friendly
+composer require wzj177/geo-friendly
 php artisan vendor:publish --provider="GeoFriendly\Laravel\GeoFriendlyServiceProvider"
 ```
 
@@ -509,7 +509,7 @@ composer analyse
 
 ```bash
 # 克隆仓库
-git clone https://github.com/geo-friendly/geo-friendly.git
+git clone https://github.com/wzj177/geo-friendly.git
 cd geo-friendly
 
 # 安装依赖
@@ -528,14 +528,14 @@ composer analyse
 
 ## 致谢
 
-- [Geo-Friendly 贡献者](https://github.com/geo-friendly/geo-friendly/graphs/contributors)
+- [Geo-Friendly 贡献者](https://github.com/wzj177/geo-friendly/graphs/contributors)
 - 从 GEO 社区获得灵感构建
 
 ## 支持
 
-- **文档**：[完整文档](https://github.com/geo-friendly/geo-friendly/docs)
-- **问题**：[GitHub Issues](https://github.com/geo-friendly/geo-friendly/issues)
-- **讨论**：[GitHub Discussions](https://github.com/geo-friendly/geo-friendly/discussions)
+- **文档**：[完整文档](https://github.com/wzj177/geo-friendly/docs)
+- **问题**：[GitHub Issues](https://github.com/wzj177/geo-friendly/issues)
+- **讨论**：[GitHub Discussions](https://github.com/wzj177/geo-friendly/discussions)
 - **平台示例**：[examples/](examples/) 目录
 
 ## 相关资源

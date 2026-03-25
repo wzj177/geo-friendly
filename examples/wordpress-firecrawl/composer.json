@@ -3,7 +3,7 @@
   "description": "WordPress + Firecrawl + Geo-Friendly integration",
   "type": "project",
   "require": {
-    "geo-friendly/geo-friendly": "^1.0",
+    "wzj177/geo-friendly": "^1.0",
     "vlucas/phpdotenv": "^5.5"
   },
   "autoload": {

@@ -3,10 +3,13 @@
   "version": "1.0.0",
   "description": "VitePress site with Geo-Friendly integration",
   "scripts": {
-    "docs:dev": "vitepress dev config",
-    "docs:build": "vitepress build config",
-    "docs:preview": "vitepress preview config",
-    "geo:generate": "php ../../bin/geo generate --config=geofriendly.yaml"
+    "docs:dev": "vitepress dev content/docs",
+    "docs:build": "vitepress build content/docs",
+    "docs:preview": "vitepress preview content/docs",
+    "geo:generate": "../../bin/geo generate",
+    "geo:init": "../../bin/geo init",
+    "geo:check": "../../bin/geo check",
+    "geo:report": "../../bin/geo report"
   },
   "devDependencies": {
     "vitepress": "^1.0.0"

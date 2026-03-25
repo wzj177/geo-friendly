@@ -203,7 +203,7 @@ jobs:
           php-version: '8.2'
 
       - name: Install Geo-Friendly
-        run: composer require geo-friendly/geo-friendly
+        run: composer require wzj177/geo-friendly
 
       - name: Generate GEO files
         run: php vendor/bin/geo generate --config=examples/vitepress-site/geofriendly.yaml

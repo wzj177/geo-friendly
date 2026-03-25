@@ -7,6 +7,8 @@ namespace GeoFriendly;
 use GeoFriendly\Config\GeofriendlyConfig;
 use GeoFriendly\Generator\AiIndexGenerator;
 use GeoFriendly\Generator\DocsJsonGenerator;
+use GeoFriendly\Generator\Enhanced\AiLlmsTxtGenerator;
+use GeoFriendly\Generator\Enhanced\AiSchemaGenerator;
 use GeoFriendly\Generator\GeneratorInterface;
 use GeoFriendly\Generator\LlmsFullTxtGenerator;
 use GeoFriendly\Generator\LlmsTxtGenerator;
@@ -129,17 +131,22 @@ class GeoFriendly
 
     /**
      * Register all default generators
+     *
+     * Automatically uses AI-enhanced generators when OpenAI is configured
      */
     private function registerDefaultGenerators(): void
     {
+        // Use AI-enhanced generators when OpenAI is configured and enabled
+        $useAI = $this->config->openai && $this->config->openai->enabled;
+
         $this->generators = [
             'robotsTxt' => new RobotsTxtGenerator(),
-            'llmsTxt' => new LlmsTxtGenerator(),
+            'llmsTxt' => $useAI ? new AiLlmsTxtGenerator() : new LlmsTxtGenerator(),
             'llmsFullTxt' => new LlmsFullTxtGenerator(),
             'sitemap' => new SitemapGenerator(),
             'docsJson' => new DocsJsonGenerator(),
             'aiIndex' => new AiIndexGenerator(),
-            'schema' => new SchemaGenerator(),
+            'schema' => $useAI ? new AiSchemaGenerator() : new SchemaGenerator(),
         ];
     }
 

@@ -5,7 +5,7 @@
  * This script generates GEO files for Shopify stores using the Shopify Admin API
  *
  * Requirements:
- * - PHP 7.4 or higher
+ * - PHP 8.2 or higher
  * - cURL extension
  * - Shopify Admin API access token
  * - Shopify store domain

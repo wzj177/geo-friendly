@@ -12,7 +12,7 @@ Generate GEO-friendly files (llms.txt, docs.json, sitemap.xml) for your Shopify 
 
 ## Requirements
 
-- PHP 7.4 or higher
+- PHP 8.2 or higher
 - cURL extension
 - Shopify Admin API access token
 - Shopify store domain

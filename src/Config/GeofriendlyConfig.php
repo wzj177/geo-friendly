@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace GeoFriendly\Config;
 
-readonly class GeofriendlyConfig
+class GeofriendlyConfig
 {
     public string $title;
     public string $url;

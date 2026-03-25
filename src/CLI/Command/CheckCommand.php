@@ -114,12 +114,15 @@ class CheckCommand extends Command
         // Overall score
         $io->section('GEO Readiness Score');
 
-        $scoreColor = match (true) {
-            $score->overallScore >= 90 => 'green',
-            $score->overallScore >= 70 => 'blue',
-            $score->overallScore >= 60 => 'yellow',
-            default => 'red',
-        };
+        if ($score->overallScore >= 90) {
+            $scoreColor = 'green';
+        } elseif ($score->overallScore >= 70) {
+            $scoreColor = 'blue';
+        } elseif ($score->overallScore >= 60) {
+            $scoreColor = 'yellow';
+        } else {
+            $scoreColor = 'red';
+        }
 
         $io->writeln(
             sprintf(

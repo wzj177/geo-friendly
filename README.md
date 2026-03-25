@@ -32,7 +32,7 @@ Generative Engine Optimization (GEO) is the next evolution of SEO, focusing on m
 
 ## Requirements
 
-- PHP 8.2 or higher
+- PHP 7.4 or higher
 - Composer
 - Extensions: `json`, `simplexml`, `yaml`
 

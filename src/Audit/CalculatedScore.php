@@ -9,7 +9,7 @@ namespace GeoFriendly\Audit;
  *
  * Represents the final calculated GEO score with breakdown and recommendations.
  */
-readonly class CalculatedScore
+class CalculatedScore
 {
     /**
      * Constructor
@@ -62,12 +62,18 @@ readonly class CalculatedScore
      */
     public function getStatusMessage(): string
     {
-        return match (true) {
-            $this->overallScore >= 90 => 'Excellent! Your site is well optimized for AI/LLM discovery.',
-            $this->overallScore >= 80 => 'Good! Your site has strong GEO fundamentals.',
-            $this->overallScore >= 70 => 'Fair. Some improvements could boost your GEO score.',
-            $this->overallScore >= 60 => 'Needs improvement. Consider adding missing GEO files.',
-            default => 'Poor. Your site needs significant GEO improvements.',
-        };
+        if ($this->overallScore >= 90) {
+            return 'Excellent! Your site is well optimized for AI/LLM discovery.';
+        }
+        if ($this->overallScore >= 80) {
+            return 'Good! Your site has strong GEO fundamentals.';
+        }
+        if ($this->overallScore >= 70) {
+            return 'Fair. Some improvements could boost your GEO score.';
+        }
+        if ($this->overallScore >= 60) {
+            return 'Needs improvement. Consider adding missing GEO files.';
+        }
+        return 'Poor. Your site needs significant GEO improvements.';
     }
 }

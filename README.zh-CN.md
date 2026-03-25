@@ -32,7 +32,7 @@ English | [简体中文](README.zh-CN.md)
 
 ## 系统要求
 
-- PHP 8.2 或更高版本
+- PHP 7.4 或更高版本
 - Composer
 - 扩展：`json`、`simplexml`、`yaml`
 

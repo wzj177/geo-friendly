@@ -204,36 +204,40 @@ class AiLlmsTxtGenerator extends LlmsTxtGenerator
     {
         $task = $params['task'] ?? 'general';
 
-        return match ($task) {
-            'enhance_description' => "You are a technical writer specializing in creating clear, concise descriptions for websites.
+        switch ($task) {
+            case 'enhance_description':
+                return "You are a technical writer specializing in creating clear, concise descriptions for websites.
 
 Please enhance the following website description to be more descriptive and engaging for AI systems. Keep it under 200 words.
 
 Original description: {$params['description']}
 Site title: {$params['title']}
 
-Return only the enhanced description, nothing else.",
+Return only the enhanced description, nothing else.";
 
-            'generate_about' => "You are a technical writer specializing in creating clear, concise content for websites.
+            case 'generate_about':
+                return "You are a technical writer specializing in creating clear, concise content for websites.
 
 Please write a brief 'About' section for a website that explains it's optimized for AI answer engines and LLMs. The content should be structured to be discoverable, parseable, complete, and current.
 
 Site title: {$params['title']}
 Site description: {$params['description']}
 
-Return only the about text, formatted in markdown with bullet points if appropriate.",
+Return only the about text, formatted in markdown with bullet points if appropriate.";
 
-            'enhance_title' => "You are a technical writer specializing in creating clear, descriptive titles for documentation pages.
+            case 'enhance_title':
+                return "You are a technical writer specializing in creating clear, descriptive titles for documentation pages.
 
 Please enhance the following documentation page title to be more descriptive and helpful for AI systems. Keep it under 80 characters.
 
 Original title: {$params['title']}
 File path: {$params['path']}
 
-Return only the enhanced title, nothing else.",
+Return only the enhanced title, nothing else.";
 
-            default => "You are a helpful AI assistant. Please assist with the task.",
-        };
+            default:
+                return "You are a helpful AI assistant. Please assist with the task.";
+        }
     }
 
     /**

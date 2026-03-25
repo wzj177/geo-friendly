@@ -33,7 +33,7 @@ declare(strict_types=1);
  *   php cli-single-url.php https://example.com --output=/tmp/geo --name="My Site"
  *
  * Requirements:
- *   - PHP 8.2 or higher
+ *   - PHP 7.4 or higher
  *   - Composer dependencies installed
  *
  * @package GeoFriendly

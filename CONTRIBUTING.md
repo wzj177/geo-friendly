@@ -20,7 +20,7 @@ This project and everyone participating in it is governed by our Code of Conduct
 
 ### Prerequisites
 
-- PHP 8.2 or higher
+- PHP 7.4 or higher
 - Composer 2.x
 - Git
 - A text editor or IDE (VS Code, PHPStorm, etc.)

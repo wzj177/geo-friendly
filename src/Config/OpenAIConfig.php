@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace GeoFriendly\Config;
 
-readonly class OpenAIConfig
+class OpenAIConfig
 {
     public string $apiKey;
     public string $baseUrl;

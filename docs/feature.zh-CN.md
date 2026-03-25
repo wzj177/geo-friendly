@@ -1,6 +1,6 @@
 # Geo-Friendly 功能特性
 
-Geo-Friendly 是一个 PHP 8.2+ Composer 包，用于生成式引擎优化（GEO），帮助网站被 ChatGPT、Claude、Perplexity 等 AI 答案引擎发现和引用。
+Geo-Friendly 是一个 PHP 7.4+ Composer 包，用于生成式引擎优化（GEO），帮助网站被 ChatGPT、Claude、Perplexity 等 AI 答案引擎发现和引用。
 
 ## 核心功能
 
@@ -148,7 +148,7 @@ openai:
 
 ## 技术栈
 
-- **PHP** - 8.2+（使用 readonly 类等现代特性）
+- **PHP** - 7.4+（兼容广泛，支持传统和现代环境）
 - **Composer** - 包管理和 PSR-4 自动加载
 - **Symfony Console** - CLI 框架
 - **Symfony YAML** - 配置解析
@@ -199,4 +199,4 @@ $geo = new GeoFriendly($config);
 5. **双模式** - 本地文件和 Firecrawl 爬取两种模式
 6. **完整 CLI** - 功能齐全的命令行工具
 7. **审计系统** - 评估和改进 GEO 就绪状态
-8. **现代 PHP** - 使用 PHP 8.2+ 特性
+8. **广泛兼容** - 支持 PHP 7.4+，适用于各种环境

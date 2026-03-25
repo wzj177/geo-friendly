@@ -236,15 +236,22 @@ class ReportCommand extends Command
      */
     private function assessCitabilityFactor(string $factor, string $outputDir): float
     {
-        return match ($factor) {
-            'author_attribution' => $this->checkFileExists($outputDir, 'docs.json') ? 0.8 : 0.3,
-            'publication_dates' => $this->checkFileExists($outputDir, 'sitemap.xml') ? 0.9 : 0.2,
-            'content_structure' => $this->checkFileExists($outputDir, 'llms.txt') ? 0.85 : 0.4,
-            'metadata_completeness' => $this->checkFileExists($outputDir, 'schema.json') ? 0.9 : 0.3,
-            'source_attribution' => $this->checkFileExists($outputDir, 'ai-index.json') ? 0.85 : 0.4,
-            'accessibility' => $this->checkFileExists($outputDir, 'robots.txt') ? 0.95 : 0.5,
-            default => 0.5,
-        };
+        switch ($factor) {
+            case 'author_attribution':
+                return $this->checkFileExists($outputDir, 'docs.json') ? 0.8 : 0.3;
+            case 'publication_dates':
+                return $this->checkFileExists($outputDir, 'sitemap.xml') ? 0.9 : 0.2;
+            case 'content_structure':
+                return $this->checkFileExists($outputDir, 'llms.txt') ? 0.85 : 0.4;
+            case 'metadata_completeness':
+                return $this->checkFileExists($outputDir, 'schema.json') ? 0.9 : 0.3;
+            case 'source_attribution':
+                return $this->checkFileExists($outputDir, 'ai-index.json') ? 0.85 : 0.4;
+            case 'accessibility':
+                return $this->checkFileExists($outputDir, 'robots.txt') ? 0.95 : 0.5;
+            default:
+                return 0.5;
+        }
     }
 
     /**
@@ -342,13 +349,24 @@ class ReportCommand extends Command
      */
     private function calculatePlatformScore(string $platform, AuditResult $fileAudit): int
     {
-        $requiredFiles = match ($platform) {
-            'openai', 'claude' => ['llms.txt', 'ai-index.json', 'docs.json'],
-            'google' => ['sitemap.xml', 'robots.txt', 'schema.json'],
-            'bing' => ['sitemap.xml', 'robots.txt'],
-            'perplexity' => ['llms.txt', 'sitemap.xml'],
-            default => [],
-        };
+        switch ($platform) {
+            case 'openai':
+            case 'claude':
+                $requiredFiles = ['llms.txt', 'ai-index.json', 'docs.json'];
+                break;
+            case 'google':
+                $requiredFiles = ['sitemap.xml', 'robots.txt', 'schema.json'];
+                break;
+            case 'bing':
+                $requiredFiles = ['sitemap.xml', 'robots.txt'];
+                break;
+            case 'perplexity':
+                $requiredFiles = ['llms.txt', 'sitemap.xml'];
+                break;
+            default:
+                $requiredFiles = [];
+                break;
+        }
 
         if (empty($requiredFiles)) {
             return $fileAudit->score;
@@ -375,12 +393,15 @@ class ReportCommand extends Command
         $io->newLine();
 
         // Overall Score
-        $scoreColor = match (true) {
-            $report->overallScore >= 90 => 'green',
-            $report->overallScore >= 70 => 'blue',
-            $report->overallScore >= 60 => 'yellow',
-            default => 'red',
-        };
+        if ($report->overallScore >= 90) {
+            $scoreColor = 'green';
+        } elseif ($report->overallScore >= 70) {
+            $scoreColor = 'blue';
+        } elseif ($report->overallScore >= 60) {
+            $scoreColor = 'yellow';
+        } else {
+            $scoreColor = 'red';
+        }
 
         $io->writeln(
             sprintf(
@@ -392,11 +413,13 @@ class ReportCommand extends Command
         );
 
         // Citability Score
-        $citabilityColor = match (true) {
-            $report->citabilityScore >= 80 => 'green',
-            $report->citabilityScore >= 60 => 'blue',
-            default => 'yellow',
-        };
+        if ($report->citabilityScore >= 80) {
+            $citabilityColor = 'green';
+        } elseif ($report->citabilityScore >= 60) {
+            $citabilityColor = 'blue';
+        } else {
+            $citabilityColor = 'yellow';
+        }
 
         $io->writeln(
             sprintf(
@@ -435,11 +458,17 @@ class ReportCommand extends Command
         $io->section('Platform Optimization Recommendations');
 
         foreach ($report->platformRecommendations as $platform => $data) {
-            $priorityColor = match ($data['priority']) {
-                'high' => 'red',
-                'medium' => 'yellow',
-                default => 'blue',
-            };
+            switch ($data['priority']) {
+                case 'high':
+                    $priorityColor = 'red';
+                    break;
+                case 'medium':
+                    $priorityColor = 'yellow';
+                    break;
+                default:
+                    $priorityColor = 'blue';
+                    break;
+            }
 
             $io->writeln(
                 sprintf(

@@ -66,7 +66,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Quality Assurance
 - Test suite with unit, integration, and feature tests
 - GitHub Actions CI/CD pipeline
-- PHP 8.2, 8.3, and 8.4 support
+- PHP 7.4, 8.0, 8.1, 8.2, 8.3, and 8.4 support
 - Code coverage with HTML and text reports
 - Static analysis with PHPStan
 

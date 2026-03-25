@@ -9,7 +9,7 @@ namespace GeoFriendly\Audit;
  *
  * Represents the result of an audit operation.
  */
-readonly class AuditResult
+class AuditResult
 {
     /**
      * Constructor

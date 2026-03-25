@@ -1,0 +1,47 @@
+{
+    "name": "geo-friendly/geo-friendly",
+    "description": "Generative Engine Optimization for PHP - Make your site discoverable by AI answer engines",
+    "type": "library",
+    "keywords": ["geo", "seo", "llm", "ai", "chatgpt", "claude", "perplexity"],
+    "license": "MIT",
+    "require": {
+        "php": "^8.2",
+        "symfony/console": "^6.0|^7.0",
+        "symfony/yaml": "^6.0|^7.0",
+        "guzzlehttp/guzzle": "^7.0",
+        "league/commonmark": "^2.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.0",
+        "phpstan/phpstan": "^1.0"
+    },
+    "suggest": {
+        "openai-php/client": "For AI-powered features and content generation"
+    },
+    "bin": [
+        "bin/geo"
+    ],
+    "autoload": {
+        "psr-4": {
+            "GeoFriendly\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "GeoFriendly\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "phpunit",
+        "analyse": "phpstan analyse src tests",
+        "validate": "composer validate"
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

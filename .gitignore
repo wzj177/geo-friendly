@@ -1,0 +1,23 @@
+# Vendor directory
+/vendor/
+
+# Composer lock file (optional - uncomment if you don't want to commit it)
+# composer.lock
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Test coverage
+.phpunit.cache/
+coverage/
+
+# Output files
+*.log

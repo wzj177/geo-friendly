@@ -7,6 +7,8 @@
 
 Generative Engine Optimization (GEO) for PHP - Make your website discoverable by AI answer engines like ChatGPT, Claude, and Perplexity.
 
+[简体中文](README.zh-CN.md) | English
+
 ## What is GEO?
 
 Generative Engine Optimization (GEO) is the next evolution of SEO, focusing on making your content discoverable and optimally formatted for AI-powered answer engines. This package helps you generate all the necessary files that AI engines use to understand and index your website.
@@ -22,14 +24,17 @@ Generative Engine Optimization (GEO) is the next evolution of SEO, focusing on m
   - `ai-index.json` - AI-friendly content index
   - `schema.json` - Schema.org markup for rich results
 
-- **CLI Tool**: Easy-to-use command-line interface
+- **CLI Tool**: Easy-to-use command-line interface with multiple commands
 - **Flexible Configuration**: YAML-based configuration for full customization
 - **Framework Agnostic**: Works with any PHP project or framework
+- **Platform Integrations**: Ready-to-use integrations for WordPress, Shopify, Laravel, and Symfony
+- **Audit & Reporting**: Built-in GEO score calculator and detailed reporting
 
 ## Requirements
 
 - PHP 8.2 or higher
 - Composer
+- Extensions: `json`, `simplexml`, `yaml`
 
 ## Installation
 
@@ -47,6 +52,13 @@ Or add it to your `composer.json`:
         "geo-friendly/geo-friendly": "^1.0"
     }
 }
+```
+
+After installation, you can use the CLI tool directly:
+
+```bash
+# The geo command is now available
+vendor/bin/geo --version
 ```
 
 ## Quick Start
@@ -153,6 +165,10 @@ Version: 1.0.0
 - [Latest Posts](https://example.com/blog/feed.xml)
 ```
 
+### llms-full.txt
+
+Comprehensive version containing full documentation content for AI training data. Includes complete article content, code examples, and detailed descriptions optimized for LLM consumption.
+
 ### robots.txt
 
 Enhanced robots.txt with directives for AI crawlers:
@@ -174,40 +190,81 @@ Allow: /
 User-agent: PerplexityBot
 Allow: /
 
+User-agent: Claude-Web
+Allow: /
+
 # Sitemap
 Sitemap: https://example.com/sitemap.xml
 ```
 
 ### sitemap.xml
 
-SEO-optimized XML sitemap with proper priorities and change frequencies.
+SEO-optimized XML sitemap with proper priorities and change frequencies. Includes all pages, posts, and custom post types with appropriate metadata.
+
+### docs.json
+
+Structured documentation index in JSON format, providing a machine-readable overview of your documentation structure with hierarchical organization and metadata.
+
+### ai-index.json
+
+AI-friendly content index that maps your content to optimal AI discovery formats, including summaries, keywords, and relevance scores.
 
 ### schema.json
 
-Schema.org structured data for rich search results.
+Schema.org structured data for rich search results, including WebSite, WebPage, Article, and Organization schemas with complete metadata.
 
 ## CLI Commands
 
+The `geo` CLI tool provides comprehensive functionality for managing your GEO files:
+
 ```bash
 # Generate all GEO files
-geo generate
+vendor/bin/geo generate
 
 # Generate specific file types
-geo generate:llms          # Generate llms.txt and llms-full.txt
-geo generate:robots        # Generate robots.txt
-geo generate:sitemap       # Generate sitemap.xml
-geo generate:schema        # Generate schema.json
-geo generate:docs          # Generate docs.json
-geo generate:ai-index      # Generate ai-index.json
+vendor/bin/geo generate:llms          # Generate llms.txt and llms-full.txt
+vendor/bin/geo generate:robots        # Generate robots.txt
+vendor/bin/geo generate:sitemap       # Generate sitemap.xml
+vendor/bin/geo generate:schema        # Generate schema.json
+vendor/bin/geo generate:docs          # Generate docs.json
+vendor/bin/geo generate:ai-index      # Generate ai-index.json
 
 # Initialize configuration
-geo init                   # Create geo-config.yaml
+vendor/bin/geo init                   # Create geo-config.yaml in current directory
 
 # Validate configuration
-geo validate               # Validate geo-config.yaml
+vendor/bin/geo validate               # Validate geo-config.yaml
+
+# Check current GEO status
+vendor/bin/geo check                  # Analyze current site and provide recommendations
+
+# Generate detailed report
+vendor/bin/geo report                 # Generate comprehensive GEO report with scores
+
+# Show help
+vendor/bin/geo --help
+vendor/bin/geo generate --help        # Help for specific command
 
 # Show version
-geo --version
+vendor/bin/geo --version
+```
+
+### Command Options
+
+All generate commands support these options:
+
+```bash
+# Custom output directory
+vendor/bin/geo generate --output=./public
+
+# Custom configuration file
+vendor/bin/geo generate --config=./custom-config.yaml
+
+# Verbose output
+vendor/bin/geo generate --verbose
+
+# Dry run (preview changes without writing)
+vendor/bin/geo generate --dry-run
 ```
 
 ## Advanced Usage
@@ -261,6 +318,20 @@ class GenerateGeoCommand extends Command
 }
 ```
 
+A complete Laravel integration package is also available:
+
+```bash
+# Install the Laravel service provider
+composer require geo-friendly/geo-friendly
+php artisan vendor:publish --provider="GeoFriendly\Laravel\GeoFriendlyServiceProvider"
+```
+
+See [examples/laravel](examples/laravel) for complete Laravel integration including:
+- Service Provider
+- Artisan Commands
+- Configuration publishing
+- Middleware for automatic regeneration
+
 **Symfony:**
 
 ```php
@@ -286,12 +357,103 @@ class GenerateGeoCommand extends Command
 }
 ```
 
+A complete Symfony bundle is available at [examples/symfony](examples/symfony) with:
+- Bundle configuration
+- Console commands
+- Twig integration
+- Event subscribers
+
+**WordPress:**
+
+A WordPress plugin is available at [examples/wordpress-plugin](examples/wordpress-plugin) featuring:
+- Automatic GEO file generation
+- Admin interface for configuration
+- Settings page for customization
+- Integration with WordPress cron
+
+**Shopify:**
+
+A Shopify app template is available at [examples/shopify-app](examples/shopify-app) with:
+- Theme app extension
+- Automatic file generation
+- Admin interface
+- Multi-language support
+
+## AI Enhancement
+
+The package includes AI-powered capabilities for content optimization:
+
+### AI-Powered Content Enhancement
+
+```php
+use GeoFriendly\GeoGenerator;
+use GeoFriendly\Enhancement\AiContentEnhancer;
+
+$generator = new GeoGenerator($config);
+$enhancer = new AiContentEnhancer($openaiApiKey);
+
+// Enhance content with AI
+$enhancedContent = $enhancer->enhanceForLlm($originalContent, [
+    'add_context' => true,
+    'summarize' => true,
+    'extract_keywords' => true,
+]);
+
+// Generate AI-optimized llms.txt
+$generator->setEnhancer($enhancer);
+$generator->generateLlmsTxt();
+```
+
+### Features
+
+- **Content Summarization**: Automatically create AI-friendly summaries
+- **Keyword Extraction**: Extract relevant keywords for AI discovery
+- **Context Enhancement**: Add contextual information for better AI understanding
+- **Schema Generation**: Generate structured data optimized for AI engines
+
+## GEO Audit & Reporting
+
+The package includes tools to audit your site's GEO readiness:
+
+```bash
+# Check your site's GEO status
+vendor/bin/geo check --url=https://example.com
+
+# Generate detailed report
+vendor/bin/geo report --url=https://example.com --output=geo-report.html
+```
+
+### GEO Score
+
+The audit calculates a comprehensive GEO score (0-100) based on:
+
+- **llms.txt Presence** (20 points)
+- **Robots.txt AI Crawler Rules** (15 points)
+- **Schema.org Markup** (15 points)
+- **Sitemap Completeness** (10 points)
+- **Content Structure** (20 points)
+- **Metadata Quality** (10 points)
+- **AI-Friendly Formatting** (10 points)
+
 ## Testing
 
 Run the test suite:
 
 ```bash
 composer test
+```
+
+Run specific test suites:
+
+```bash
+# Unit tests only
+vendor/bin/phpunit --testsuite=Unit
+
+# Integration tests
+vendor/bin/phpunit --testsuite=Integration
+
+# Feature tests
+vendor/bin/phpunit --testsuite=Feature
 ```
 
 Run static analysis:
@@ -304,20 +466,38 @@ composer analyse
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
+### Development Setup
+
+```bash
+# Clone the repository
+git clone https://github.com/geo-friendly/geo-friendly.git
+cd geo-friendly
+
+# Install dependencies
+composer install
+
+# Run tests
+composer test
+
+# Run analysis
+composer analyse
+```
+
 ## License
 
 This package is open-sourced software licensed under the [MIT license](LICENSE.md).
 
 ## Credits
 
-- [Your Name](https://github.com/yourusername)
-- [All Contributors](../../contributors)
+- [Geo-Friendly Contributors](https://github.com/geo-friendly/geo-friendly/graphs/contributors)
+- Built with inspiration from the GEO community
 
 ## Support
 
 - **Documentation**: [Full Documentation](https://github.com/geo-friendly/geo-friendly/docs)
 - **Issues**: [GitHub Issues](https://github.com/geo-friendly/geo-friendly/issues)
 - **Discussions**: [GitHub Discussions](https://github.com/geo-friendly/geo-friendly/discussions)
+- **Platform Examples**: [examples/](examples/) directory
 
 ## Related Resources
 
@@ -325,6 +505,12 @@ This package is open-sourced software licensed under the [MIT license](LICENSE.m
 - [Schema.org](https://schema.org) - Structured data markup
 - [Google's AI Crawlers](https://developers.google.com/search/docs/crawling-indexing/overview-google-crawlers)
 - [OpenAI's documentation on making content discoverable](https://platform.openai.com/docs)
+- [Anthropic's Claude documentation](https://docs.anthropic.com)
+- [Perplexity AI documentation](https://docs.perplexity.ai)
+
+## Changelog
+
+Please see [CHANGELOG.md](CHANGELOG.md) for recent changes.
 
 ---
 

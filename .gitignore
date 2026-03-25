@@ -21,3 +21,7 @@ coverage/
 
 # Output files
 *.log
+
+# User configuration (keep .dist files)
+geofriendly.yaml
+geofriendly.yml

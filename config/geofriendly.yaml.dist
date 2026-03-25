@@ -1,0 +1,63 @@
+# Geo-Friendly Configuration File
+# Copy this file to geofriendly.yaml and customize for your site
+
+# Basic site information
+title: 'My Site'
+url: 'https://example.com'
+description: 'A description of your site for AI engines'
+
+# Directory configuration
+outDir: './public'
+contentDir: './content'
+
+# Generator configuration
+# Each generator can be enabled (true) or disabled (false)
+generators:
+  robotsTxt: true      # Generate robots.txt with AI-specific directives
+  llmsTxt: true        # Generate llms.txt (AI discovery)
+  llmsFullTxt: true    # Generate comprehensive llms-full.txt
+  rawMarkdown: true    # Generate raw markdown files for AI ingestion
+  manifest: true       # Generate AI-friendly manifest
+  sitemap: true        # Generate XML sitemap
+  aiIndex: true        # Generate AI index files
+  schema: true         # Generate JSON-LD schema markup
+
+# Robots.txt configuration
+# Additional rules to include in robots.txt
+robots:
+  - 'User-agent: *'
+  - 'Allow: /'
+
+# Widget configuration
+# Customize the appearance of Geo-Friendly widgets
+widget:
+  color: '#0066cc'
+  position: 'bottom-right'
+  size: 'medium'
+
+# Schema.org configuration
+# Configure default schema types and properties
+schema:
+  '@type': 'WebSite'
+  '@context': 'https://schema.org'
+
+# Open Graph configuration
+# Configure Open Graph meta tags
+og:
+  type: 'website'
+  siteName: 'My Site'
+
+# OpenAI configuration
+# Configure OpenAI API access for AI-powered features
+openai:
+  # Your OpenAI API key (get from https://platform.openai.com/api-keys)
+  apiKey: ''
+
+  # Base URL for OpenAI API (only change if using a proxy)
+  baseUrl: 'https://api.openai.com/v1'
+
+  # Model to use for AI features
+  model: 'gpt-4o-mini'
+
+  # Enable AI features (automatically enabled if apiKey is provided)
+  enabled: true

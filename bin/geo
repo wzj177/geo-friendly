@@ -16,7 +16,7 @@ foreach ([__DIR__ . '/../../autoload.php', __DIR__ . '/../vendor/autoload.php'] 
     }
 }
 
-use GeoFriendly\Console\Application;
+use GeoFriendly\CLI\Application;
 
 $app = new Application();
 $app->run();

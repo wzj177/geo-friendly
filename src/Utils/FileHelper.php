@@ -163,4 +163,30 @@ class FileHelper
         $relative = str_replace($baseDir . '/', '', $filepath);
         return $relative;
     }
+
+    /**
+     * Write content to a file.
+     *
+     * @param string $path The file path
+     * @param string $content The content to write
+     * @return void
+     * @throws \RuntimeException If file cannot be written
+     */
+    public static function writeFile(string $path, string $content): void
+    {
+        $dir = dirname($path);
+
+        // Create directory if it doesn't exist
+        if (!is_dir($dir)) {
+            if (!mkdir($dir, 0755, true)) {
+                throw new \RuntimeException(sprintf('Failed to create directory: %s', $dir));
+            }
+        }
+
+        // Write content
+        $result = file_put_contents($path, $content);
+        if ($result === false) {
+            throw new \RuntimeException(sprintf('Failed to write file: %s', $path));
+        }
+    }
 }

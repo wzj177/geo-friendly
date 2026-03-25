@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace GeoFriendly\CLI;
 
 use GeoFriendly\CLI\Command\GenerateCommand;
+use GeoFriendly\CLI\Command\InitCommand;
 use Symfony\Component\Console\Application as SymfonyApplication;
 use Symfony\Component\Console\CommandLoader\CommandLoaderInterface;
 use Symfony\Component\Console\CommandLoader\ContainerCommandLoader;
@@ -47,8 +48,7 @@ class Application
     {
         return [
             new GenerateCommand(),
-            // Placeholder commands for future implementation
-            // new InitCommand(),
+            new InitCommand(),
             // new CheckCommand(),
             // new ReportCommand(),
         ];

@@ -1,0 +1,30 @@
+includes:
+    - vendor/phpstan/phpstan/conf/bleedingEdge.neon
+
+parameters:
+    level: 8
+
+    paths:
+        - src
+        - tests
+
+    tmpDir: build/phpstan
+
+    checkMissingIterableValueType: true
+    checkGenericClassInNonGenericObjectType: true
+
+    ignoreErrors:
+        # Add specific error ignores if needed
+        # Example:
+        # - '#Call to an undefined method#'
+
+    excludes_analyse:
+        - */vendor/*
+        - */build/*
+        - */cache/*
+
+    parallel:
+        jobSize: 20
+        minimumNumberOfJobsPerProcess: 2
+        maximumNumberOfProcesses: 32
+        processTimeout: 300.0

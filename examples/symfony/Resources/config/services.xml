@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services
+        https://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <!-- GeoFriendly main service -->
+        <service id="GeoFriendly\GeoFriendly" public="true">
+            <argument type="collection" /> <!-- Config array -->
+        </service>
+
+        <!-- Console command -->
+        <service id="geofriendly.command.generate" class="GeoFriendly\Symfony\Command\GenerateCommand">
+            <argument type="service" id="GeoFriendly\GeoFriendly" />
+            <tag name="console.command" command="geofriendly:generate" />
+        </service>
+
+        <!-- Auto-generation listener -->
+        <service id="geofriendly.listener.auto_generate" class="GeoFriendly\Symfony\EventListener\AutoGenerateListener">
+            <argument type="service" id="GeoFriendly\GeoFriendly" />
+            <tag name="kernel.event_listener" event="kernel.terminate" method="onKernelTerminate" priority="-255" />
+        </service>
+
+        <!-- Route discovery service -->
+        <service id="geofriendly.route_discoverer" class="GeoFriendly\Symfony\Service\RouteDiscoverer">
+            <argument type="service" id="router" />
+            <argument type="service" id="request_stack" />
+        </service>
+    </services>
+</container>

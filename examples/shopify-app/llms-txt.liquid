@@ -1,0 +1,82 @@
+{%- comment -%}
+  Geo-Friendly LLM Discovery Template for Shopify
+  Generates llms.txt file for AI/LLM discovery
+
+  Installation:
+  1. Create a new template in your theme: templates/llms.txt.liquid
+  2. Add this content to the template
+  3. Access at: https://yourstore.com/pages/llms
+{%- endcomment -%}
+{{- '#' -}}
+{{- 'Title: ' | append: shop.name | strip_newlines -}}
+{{- '\n' -}}
+{{- '#' -}}
+{{- 'Description: ' | append: shop.description | default: 'Online Store' | strip_newlines -}}
+{{- '\n' -}}
+{{- '#' -}}
+{{- 'Homepage: ' | append: shop.secure_url | strip_newlines -}}
+{{- '\n\n' -}}
+
+{%- if shop.currency -%}
+{{- 'Currency: ' | append: shop.currency | strip_newlines -}}
+{{- '\n' -}}
+{%- endif -%}
+
+{%- comment -%} Key Information {%- endcomment -%}
+{{- '#' -}}
+{{- 'Contact: ' | append: shop.customer_accounts_enabled | strip_newlines -}}
+{{- '\n' -}}
+
+{%- comment -%} Product Discovery {%- endcomment -%}
+{{- '\n# Products\n' -}}
+
+{%- comment -%} Featured Products {%- endcomment -%}
+{%- assign featured_products = collections['all'].products | sample: 10 -%}
+{%- for product in featured_products -%}
+  {{- product.title | append: ': ' | append: shop.secure_url | append: '/products/' | append: product.handle | strip_newlines -}}
+  {{- '\n' -}}
+{%- endfor -%}
+
+{%- comment -%} Collection URLs {%- endcomment -%}
+{{- '\n# Collections\n' -}}
+
+{%- for collection in collections limit: 20 -%}
+  {%- unless collection.handle == 'frontpage' -%}
+    {{- collection.title | append: ': ' | append: shop.secure_url | append: '/collections/' | append: collection.handle | strip_newlines -}}
+    {{- '\n' -}}
+  {%- endunless -%}
+{%- endfor -%}
+
+{%- comment -%} Blog and Pages {%- endcomment -%}
+{{- '\n# Content\n' -}}
+
+{%- for page in pages limit: 15 -%}
+  {{- page.title | append: ': ' | append: shop.secure_url | append: '/pages/' | append: page.handle | strip_newlines -}}
+  {{- '\n' -}}
+{%- endfor -%}
+
+{%- for blog in blogs limit: 5 -%}
+  {{- blog.title | append: ': ' | append: shop.secure_url | append: '/blogs/' | append: blog.handle | append: '.atom' | strip_newlines -}}
+  {{- '\n' -}}
+{%- endfor -%}
+
+{%- comment -%} Technical Information {%- endcomment -%}
+{{- '\n# Technical\n' -}}
+{{- 'Platform: Shopify\n' -}}
+{{- 'API Version: 2024-01\n' -}}
+
+{%- comment -%} Legal and Policy Pages {%- endcomment -%}
+{{- '\n# Legal\n' -}}
+
+{%- for page in pages -%}
+  {%- if page.handle contains 'policy' or page.handle contains 'legal' or page.handle contains 'terms' or page.handle contains 'privacy' -%}
+    {{- page.title | append: ': ' | append: shop.secure_url | append: '/pages/' | append: page.handle | strip_newlines -}}
+    {{- '\n' -}}
+  {%- endif -%}
+{%- endfor -%}
+
+{%- comment -%} Additional Metadata {%- endcomment -%}
+{{- '\n# Metadata\n' -}}
+{{- 'Last Updated: ' | append: 'now' | date: '%Y-%m-%d' | strip_newlines -}}
+{{- '\n' -}}
+{{- 'Store Type: ' | append: shop.products_count | append: ' products available' | strip_newlines -}}

@@ -48,28 +48,41 @@ og:
   siteName: 'My Site'
 
 # Firecrawl configuration
-# Configure Firecrawl API for website crawling
+# Use Firecrawl API to crawl and extract website content
+# Get your API key from: https://www.firecrawl.dev/
 firecrawl:
-  # Your Firecrawl API key (get from https://www.firecrawl.dev/)
-  apiKey: ''
+  # API key for Firecrawl (leave empty to disable Firecrawl)
+  # Set via environment variable: FIRECRAWL_API_KEY
+  apiKey: '%env(FIRECRAWL_API_KEY)%'
 
-  # Base URL for Firecrawl API (only change if using a proxy)
+  # Base URL for Firecrawl API
+  # Default: https://api.firecrawl.dev/v1
+  # Change only if using a custom endpoint or proxy
   apiUrl: 'https://api.firecrawl.dev/v1'
 
-  # Enable Firecrawl for content extraction (automatically enabled if apiKey is provided)
+  # Enable Firecrawl for content extraction
+  # When enabled (apiKey is set), geo-friendly will crawl URLs instead of reading local files
+  # This is useful for dynamic websites (WordPress, Shopify, custom PHP apps, etc.)
   enabled: true
 
 # OpenAI configuration
-# Configure OpenAI API access for AI-powered features
+# Use OpenAI API for AI-powered content enhancement
+# Get your API key from: https://platform.openai.com/api-keys
 openai:
-  # Your OpenAI API key (get from https://platform.openai.com/api-keys)
-  apiKey: ''
+  # API key for OpenAI (leave empty to disable AI features)
+  # Set via environment variable: OPENAI_API_KEY
+  apiKey: '%env(OPENAI_API_KEY)%'
 
-  # Base URL for OpenAI API (only change if using a proxy)
+  # Base URL for OpenAI API
+  # Default: https://api.openai.com/v1
+  # Change if using OpenAI-compatible endpoint (Azure OpenAI, custom proxy, etc.)
   baseUrl: 'https://api.openai.com/v1'
 
   # Model to use for AI features
+  # Options: gpt-4o-mini (recommended, cost-effective), gpt-4o (better quality)
   model: 'gpt-4o-mini'
 
-  # Enable AI features (automatically enabled if apiKey is provided)
+  # Enable AI enhancement features
+  # When enabled (apiKey is set), content will be AI-optimized for better GEO
+  # Features: better descriptions, keyword extraction, SEO optimization
   enabled: true

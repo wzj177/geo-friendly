@@ -4,6 +4,7 @@
     "type": "library",
     "keywords": ["geo", "seo", "llm", "ai", "chatgpt", "claude", "perplexity"],
     "license": "MIT",
+    "version": "1.0.0",
     "require": {
         "php": "^8.2",
         "symfony/console": "^6.0|^7.0",

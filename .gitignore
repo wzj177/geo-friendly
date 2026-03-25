@@ -26,4 +26,8 @@ coverage/
 geofriendly.yaml
 geofriendly.yml
 
+# Build artifacts
 build/*
+
+# Superpowers planning docs (local use only)
+docs/superpowers/

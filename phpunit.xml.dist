@@ -25,15 +25,19 @@
 
     <coverage>
         <report>
-            <html outputDirectory="coverage/html"/>
+            <html outputDirectory="coverage/html" lowUpperBound="50" highLowerBound="80"/>
             <clover outputFile="coverage/clover.xml"/>
+            <text outputFile="coverage/coverage.txt" showUncoveredFiles="true" showOnlySummary="false"/>
         </report>
         <include>
             <directory suffix=".php">src</directory>
         </include>
         <exclude>
             <directory>vendor</directory>
+            <directory suffix="Interface.php">src</directory>
         </exclude>
+        <ignoreDeprecatedCodeUnits>true</ignoreDeprecatedCodeUnits>
+        <disableCodeCoverageIgnore>true</disableCodeCoverageIgnore>
     </coverage>
 
     <source>

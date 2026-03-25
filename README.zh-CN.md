@@ -105,7 +105,46 @@ $generator->generateSchema();
 
 ## 配置
 
-在项目根目录创建 `geo-config.yaml` 文件：
+### 内容模式
+
+Geo-Friendly 支持两种内容生成模式：
+
+1. **本地文件模式**（默认）- 从 `contentDir` 使用 markdown 文件
+2. **Firecrawl 模式**- 使用 Firecrawl API 爬取网站
+
+#### 本地文件模式
+
+最适合文档站点、博客，以及当您可以访问源 markdown 文件时：
+
+```yaml
+title: '我的文档'
+url: 'https://docs.example.com'
+contentDir: './content'
+```
+
+#### Firecrawl 模式
+
+最适合电商网站、企业网站，或需要爬取外部网站时：
+
+```yaml
+title: '我的商店'
+url: 'https://store.example.com'
+contentDir: ''  # 空值以使用 Firecrawl
+firecrawl:
+  apiKey: 'your-firecrawl-api-key'
+  apiUrl: 'https://api.firecrawl.dev/v1'
+  enabled: true
+```
+
+**何时使用每种模式：**
+- **本地文件**：文档站点（Docusaurus、MkDocs）、博客（Hugo、Jekyll）、知识库
+- **Firecrawl**：电商网站、企业网站、SaaS 应用、动态内容
+
+详细信息请参阅[内容模式文档](docs/content-modes.md)。
+
+### 基本配置
+
+在项目根目录创建 `geofriendly.yaml` 文件：
 
 ```yaml
 # 基本站点信息

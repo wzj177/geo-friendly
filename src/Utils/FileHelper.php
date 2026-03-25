@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace GeoFriendly\Utils;
 
+use GeoFriendly\Config\GeofriendlyConfig;
+
 /**
  * File helper utility for file operations.
  *
- * Provides methods for collecting markdown files and parsing frontmatter.
+ * Provides methods for collecting markdown files, parsing frontmatter,
+ * and extracting content from URLs using Firecrawl.
  */
 class FileHelper
 {
@@ -187,6 +190,37 @@ class FileHelper
         $result = file_put_contents($path, $content);
         if ($result === false) {
             throw new \RuntimeException(sprintf('Failed to write file: %s', $path));
+        }
+    }
+
+    /**
+     * Extract content from a URL using Firecrawl if enabled.
+     *
+     * @param string $url The URL to extract content from
+     * @param GeofriendlyConfig $config The configuration object
+     * @return array<string, mixed> Array containing markdown content and metadata
+     */
+    public static function extractContent(string $url, GeofriendlyConfig $config): array
+    {
+        $firecrawlConfig = $config->firecrawl;
+
+        if (empty($firecrawlConfig) || !($firecrawlConfig['enabled'] ?? false)) {
+            return [];
+        }
+
+        $apiKey = $firecrawlConfig['apiKey'] ?? '';
+        $apiUrl = $firecrawlConfig['apiUrl'] ?? 'https://api.firecrawl.dev/v1';
+
+        if (empty($apiKey)) {
+            return [];
+        }
+
+        try {
+            return ContentExtractor::extractFromFirecrawl($url, $apiKey, $apiUrl);
+        } catch (\RuntimeException $e) {
+            // Log error but don't throw - fall back to local files
+            error_log(sprintf('Firecrawl extraction failed for %s: %s', $url, $e->getMessage()));
+            return [];
         }
     }
 }

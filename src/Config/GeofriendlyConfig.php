@@ -22,6 +22,8 @@ readonly class GeofriendlyConfig
     /** @var array<string, mixed> */
     public array $og;
     public ?OpenAIConfig $openai;
+    /** @var array<string, mixed> */
+    public array $firecrawl;
 
     /**
      * @var array<string, bool>
@@ -56,6 +58,14 @@ readonly class GeofriendlyConfig
         $this->widget = $config['widget'] ?? [];
         $this->schema = $config['schema'] ?? [];
         $this->og = $config['og'] ?? [];
+
+        // Create Firecrawl config
+        $firecrawlConfig = $config['firecrawl'] ?? [];
+        $this->firecrawl = [
+            'apiKey' => $firecrawlConfig['apiKey'] ?? '',
+            'apiUrl' => $firecrawlConfig['apiUrl'] ?? 'https://api.firecrawl.dev/v1',
+            'enabled' => !empty($firecrawlConfig['apiKey']) ?? false,
+        ];
 
         // Create OpenAI config if provided
         $this->openai = isset($config['openai']) && is_array($config['openai'])

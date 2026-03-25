@@ -105,7 +105,46 @@ $generator->generateSchema();
 
 ## Configuration
 
-Create a `geo-config.yaml` file in your project root:
+### Content Modes
+
+Geo-Friendly supports two modes for content generation:
+
+1. **Local Files Mode** (default) - Uses markdown files from your `contentDir`
+2. **Firecrawl Mode** - Crawls websites using the Firecrawl API
+
+#### Local Files Mode
+
+Best for documentation sites, blogs, and when you have access to source markdown files:
+
+```yaml
+title: 'My Documentation'
+url: 'https://docs.example.com'
+contentDir: './content'
+```
+
+#### Firecrawl Mode
+
+Best for e-commerce sites, corporate websites, or when you need to crawl external sites:
+
+```yaml
+title: 'My Store'
+url: 'https://store.example.com'
+contentDir: ''  # Empty to use Firecrawl
+firecrawl:
+  apiKey: 'your-firecrawl-api-key'
+  apiUrl: 'https://api.firecrawl.dev/v1'
+  enabled: true
+```
+
+**When to use each mode:**
+- **Local Files**: Documentation sites (Docusaurus, MkDocs), blogs (Hugo, Jekyll), knowledge bases
+- **Firecrawl**: E-commerce sites, corporate websites, SaaS applications, dynamic content
+
+For detailed information, see [Content Modes Documentation](docs/content-modes.md).
+
+### Basic Configuration
+
+Create a `geofriendly.yaml` file in your project root:
 
 ```yaml
 # Basic site information

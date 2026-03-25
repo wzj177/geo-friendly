@@ -54,6 +54,21 @@ class LlmsTxtGenerator implements GeneratorInterface
 
         // Collect and group markdown files
         $files = FileHelper::collectMarkdownFiles($config->contentDir);
+
+        // If no local files and Firecrawl is enabled, try to extract content from the site URL
+        if (empty($files) && !empty($config->url)) {
+            $extractedContent = FileHelper::extractContent($config->url, $config);
+            if (!empty($extractedContent['markdown'])) {
+                // Add a note about Firecrawl-extracted content
+                $lines[] = '### Site Content (Extracted via Firecrawl)';
+                $lines[] = '';
+                $lines[] = 'The following content was extracted from ' . $this->escapeForMarkdown($config->url);
+                $lines[] = '';
+                $lines[] = $extractedContent['markdown'];
+                $lines[] = '';
+            }
+        }
+
         $groupedFiles = $this->groupFilesByDirectory($files);
 
         if (!empty($groupedFiles)) {

@@ -47,6 +47,18 @@ og:
   type: 'website'
   siteName: 'My Site'
 
+# Firecrawl configuration
+# Configure Firecrawl API for website crawling
+firecrawl:
+  # Your Firecrawl API key (get from https://www.firecrawl.dev/)
+  apiKey: ''
+
+  # Base URL for Firecrawl API (only change if using a proxy)
+  apiUrl: 'https://api.firecrawl.dev/v1'
+
+  # Enable Firecrawl for content extraction (automatically enabled if apiKey is provided)
+  enabled: true
+
 # OpenAI configuration
 # Configure OpenAI API access for AI-powered features
 openai:

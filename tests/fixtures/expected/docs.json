@@ -1,0 +1,29 @@
+{
+    "title": "Example Site",
+    "description": "A sample site for testing GEO file generation",
+    "version": "1.0.0",
+    "last_updated": "2024-03-25",
+    "pages": [
+        {
+            "url": "https://example.com/sample-page",
+            "title": "Sample Page",
+            "description": "This is a sample page for testing GEO file generation",
+            "last_updated": "2024-03-25",
+            "content_type": "documentation"
+        },
+        {
+            "url": "https://example.com/about",
+            "title": "About Our Company",
+            "description": "We are a technology company focused on making the web more discoverable by AI answer engines",
+            "last_updated": "2024-03-25",
+            "content_type": "about"
+        },
+        {
+            "url": "https://example.com/documentation",
+            "title": "Documentation",
+            "description": "Welcome to our comprehensive documentation",
+            "last_updated": "2024-03-25",
+            "content_type": "documentation"
+        }
+    ]
+}

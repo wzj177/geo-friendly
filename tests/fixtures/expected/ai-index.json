@@ -1,0 +1,31 @@
+{
+    "metadata": {
+        "version": "1.0.0",
+        "generated": "2024-03-25T00:00:00Z",
+        "site_name": "Example Site",
+        "site_url": "https://example.com"
+    },
+    "content": [
+        {
+            "url": "https://example.com/sample-page",
+            "title": "Sample Page",
+            "summary": "This is a sample page for testing GEO file generation. Features include Feature 1, Feature 2, and Feature 3. The page provides API reference endpoints for user management and pricing information.",
+            "keywords": ["features", "api", "pricing", "support"],
+            "category": "documentation"
+        },
+        {
+            "url": "https://example.com/about",
+            "title": "About Our Company",
+            "summary": "We are a technology company focused on making the web more discoverable by AI answer engines. Our mission is to democratize access to AI optimization tools.",
+            "keywords": ["company", "mission", "team", "contact"],
+            "category": "about"
+        },
+        {
+            "url": "https://example.com/documentation",
+            "title": "Documentation",
+            "summary": "Comprehensive documentation covering installation, configuration, and usage of the geo-friendly package. Includes CLI commands, PHP API examples, and FAQ.",
+            "keywords": ["documentation", "installation", "configuration", "usage", "faq"],
+            "category": "documentation"
+        }
+    ]
+}

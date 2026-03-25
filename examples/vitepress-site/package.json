@@ -1,0 +1,14 @@
+{
+  "name": "vitepress-geo-example",
+  "version": "1.0.0",
+  "description": "VitePress site with Geo-Friendly integration",
+  "scripts": {
+    "docs:dev": "vitepress dev config",
+    "docs:build": "vitepress build config",
+    "docs:preview": "vitepress preview config",
+    "geo:generate": "php ../../bin/geo generate --config=geofriendly.yaml"
+  },
+  "devDependencies": {
+    "vitepress": "^1.0.0"
+  }
+}

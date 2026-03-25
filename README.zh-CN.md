@@ -547,6 +547,169 @@ composer analyse
 - [Anthropic 的 Claude 文档](https://docs.anthropic.com)
 - [Perplexity AI 文档](https://docs.perplexity.ai)
 
+## 使用场景
+
+Geo-Friendly 支持三种主要使用场景，根据你的项目类型选择：
+
+### 1. 本地 Markdown 静态站点（推荐 Recommended）
+
+**适用于**: VitePress、Docusaurus、Hugo、Jekyll、MkDocs、GitBook
+
+你在 `content/` 目录中维护 markdown 文件，Geo-Friendly 从这些文件生成 GEO 文件。
+
+**示例**: [examples/vitepress-site](examples/vitepress-site)
+
+```bash
+# 项目结构
+my-docs/
+├── content/
+│   ├── index.md
+│   ├── getting-started.md
+│   └── api/
+│       └── reference.md
+├── geofriendly.yaml
+└── package.json
+
+# 生成 GEO 文件
+vendor/bin/geo generate
+```
+
+**配置**:
+```yaml
+title: '我的文档'
+url: 'https://docs.example.com'
+contentDir: './content'
+firecrawl:
+  enabled: false
+```
+
+**优势**:
+- ✅ 快速且免费（无需 API 调用）
+- ✅ 内容可版本控制
+- ✅ 支持离线使用
+- ✅ 非常适合技术文档
+
+**完整指南**: [docs/content-modes.zh-CN.md](docs/content-modes.zh-CN.md#本地文件模式)
+
+---
+
+### 2. Firecrawl 爬虫动态站点（爬虫模式 Crawler Mode）
+
+**适用于**: WordPress、Shopify、WooCommerce、自定义 PHP 应用
+
+无需访问源文件，Firecrawl API 爬取你的实时网站并提取内容。
+
+**示例**: [examples/wordpress-firecrawl](examples/wordpress-firecrawl)
+
+```bash
+# 克隆示例
+git clone https://github.com/yourusername/geo-friendly.git
+cd geo-friendly/examples/wordpress-firecrawl
+
+# 配置环境
+cp .env.example .env
+# 编辑 .env 填入 WordPress URL 和 Firecrawl API key
+
+# 生成 GEO 文件
+composer generate
+```
+
+**配置**:
+```yaml
+title: '我的 WordPress 站点'
+url: 'https://mysite.com'
+contentDir: ''  # 留空使用 Firecrawl
+firecrawl:
+  apiKey: '%env(FIRECRAWL_API_KEY)%'
+  enabled: true
+```
+
+**优势**:
+- ✅ 无需修改代码
+- ✅ 适用于任何 CMS
+- ✅ 自动内容提取
+- ✅ 易于设置
+
+**完整指南**: [docs/content-modes.zh-CN.md](docs/content-modes.zh-CN.md#firecrawl-模式)
+
+---
+
+### 3. 自定义后台系统（通用后台系统）
+
+**适用于**: SaaS 应用、企业平台、多租户系统
+
+你构建一个带 Markdown 编辑器的自定义管理面板来维护内容，然后使用 Geo-Friendly 编程生成 GEO 文件。
+
+**架构**:
+```
+管理面板 (Markdown 编辑器)
+    ↓
+数据库 (结构化内容)
+    ↓
+Geo-Friendly PHP 包
+    ↓
+GEO 文件 (llms.txt, sitemap.xml 等)
+    ↓
+AI 引擎 (ChatGPT、Claude、Perplexity)
+```
+
+**代码示例**:
+```php
+use GeoFriendly\GeoFriendly;
+
+// 1. 从数据库获取内容
+$contents = Content::where('status', 'published')->get();
+
+// 2. 准备配置
+$config = [
+    'title' => '我的 SaaS 平台',
+    'url' => 'https://app.example.com',
+    'contentDir' => $tempDir,  // 临时 markdown 文件
+    'outDir' => storage_path('geo'),
+];
+
+// 3. 生成
+$geo = new GeoFriendly($config);
+[$generated, $errors] = $geo->generate();
+
+// 4. 通过 API 提供或部署到 CDN
+```
+
+**数据库设计**:
+```sql
+CREATE TABLE contents (
+    id BIGINT PRIMARY KEY,
+    slug VARCHAR(255),
+    url VARCHAR(512),
+    title VARCHAR(255),      -- GEO 必需
+    description TEXT,        -- GEO 必需
+    content MEDIUMTEXT,      -- Markdown 内容
+    status ENUM('draft', 'published'),
+    published_at DATETIME
+);
+```
+
+**完整指南**: [docs/generic-backend-solution.zh-CN.md](docs/generic-backend-solution.zh-CN.md)
+
+**优势**:
+- ✅ 完全控制内容
+- ✅ 支持多租户
+- ✅ API 驱动生成
+- ✅ 非常适合 SaaS 平台
+
+---
+
+### 应该选择哪种场景？
+
+| 你的情况 | 推荐场景 | 示例 |
+|---------|---------|------|
+| 我有文档的 markdown 文件 | 静态站点（本地 Markdown） | VitePress、Docusaurus |
+| 我有 WordPress/Shopify 站点 | 动态站点（Firecrawl） | WordPress 博客 |
+| 我需要自定义内容管理系统 | 自定义后台系统 | SaaS 平台 |
+| 我想要最简单的设置 | 静态站点（本地 Markdown） | 个人博客 |
+| 我不能修改网站代码 | 动态站点（Firecrawl） | 企业网站 |
+| 我需要多语言支持 | 自定义后台系统 | 企业平台 |
+
 ## 更新日志
 
 请参阅 [CHANGELOG.md](CHANGELOG.md) 了解最近的更改。

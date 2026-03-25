@@ -1,1 +1,0 @@
-export { generateAEOFiles, type GenerateResult } from './generate-wrapper';

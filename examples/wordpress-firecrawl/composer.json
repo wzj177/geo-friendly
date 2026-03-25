@@ -1,0 +1,18 @@
+{
+  "name": "wordpress-firecrawl-geo",
+  "description": "WordPress + Firecrawl + Geo-Friendly integration",
+  "type": "project",
+  "require": {
+    "geo-friendly/geo-friendly": "^1.0",
+    "vlucas/phpdotenv": "^5.5"
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\": "src/"
+    }
+  },
+  "scripts": {
+    "generate": "php scripts/generate.php",
+    "deploy": "bash scripts/deploy.sh"
+  }
+}

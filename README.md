@@ -547,6 +547,169 @@ This package is open-sourced software licensed under the [MIT license](LICENSE.m
 - [Anthropic's Claude documentation](https://docs.anthropic.com)
 - [Perplexity AI documentation](https://docs.perplexity.ai)
 
+## Usage Scenarios
+
+Geo-Friendly supports three main usage scenarios depending on your project type:
+
+### 1. Static Sites with Local Markdown (推荐 Recommended)
+
+**Best for**: VitePress, Docusaurus, Hugo, Jekyll, MkDocs, GitBook
+
+You maintain markdown files in a `content/` directory, and Geo-Friendly generates GEO files from them.
+
+**Example**: [examples/vitepress-site](examples/vitepress-site)
+
+```bash
+# Your project structure
+my-docs/
+├── content/
+│   ├── index.md
+│   ├── getting-started.md
+│   └── api/
+│       └── reference.md
+├── geofriendly.yaml
+└── package.json
+
+# Generate GEO files
+vendor/bin/geo generate
+```
+
+**Configuration**:
+```yaml
+title: 'My Documentation'
+url: 'https://docs.example.com'
+contentDir: './content'
+firecrawl:
+  enabled: false
+```
+
+**Advantages**:
+- ✅ Fast and free (no API calls)
+- ✅ Version control for content
+- ✅ Works offline
+- ✅ Perfect for technical documentation
+
+**Full Guide**: [docs/content-modes.md](docs/content-modes.md#local-files-mode)
+
+---
+
+### 2. Dynamic Sites with Firecrawl (爬虫模式 Crawler Mode)
+
+**Best for**: WordPress, Shopify, WooCommerce, custom PHP apps
+
+You don't need access to source files. Firecrawl API crawls your live website and extracts content.
+
+**Example**: [examples/wordpress-firecrawl](examples/wordpress-firecrawl)
+
+```bash
+# Clone the example
+git clone https://github.com/yourusername/geo-friendly.git
+cd geo-friendly/examples/wordpress-firecrawl
+
+# Configure environment
+cp .env.example .env
+# Edit .env with your WordPress URL and Firecrawl API key
+
+# Generate GEO files
+composer generate
+```
+
+**Configuration**:
+```yaml
+title: 'My WordPress Site'
+url: 'https://mysite.com'
+contentDir: ''  # Empty to use Firecrawl
+firecrawl:
+  apiKey: '%env(FIRECRAWL_API_KEY)%'
+  enabled: true
+```
+
+**Advantages**:
+- ✅ No code changes needed
+- ✅ Works with any CMS
+- ✅ Automatic content extraction
+- ✅ Easy to set up
+
+**Full Guide**: [docs/content-modes.md](docs/content-modes.md#firecrawl-mode)
+
+---
+
+### 3. Custom Backend Systems (通用后台系统)
+
+**Best for**: SaaS applications, enterprise platforms, multi-tenant systems
+
+You build a custom admin panel with a Markdown editor to maintain content, then use Geo-Friendly programmatically to generate GEO files.
+
+**Architecture**:
+```
+Admin Panel (Markdown Editor)
+    ↓
+Database (structured content)
+    ↓
+Geo-Friendly PHP Package
+    ↓
+GEO Files (llms.txt, sitemap.xml, etc.)
+    ↓
+AI Engines (ChatGPT, Claude, Perplexity)
+```
+
+**Code Example**:
+```php
+use GeoFriendly\GeoFriendly;
+
+// 1. Fetch content from database
+$contents = Content::where('status', 'published')->get();
+
+// 2. Prepare config
+$config = [
+    'title' => 'My SaaS Platform',
+    'url' => 'https://app.example.com',
+    'contentDir' => $tempDir,  // Temp markdown files
+    'outDir' => storage_path('geo'),
+];
+
+// 3. Generate
+$geo = new GeoFriendly($config);
+[$generated, $errors] = $geo->generate();
+
+// 4. Serve via API or deploy to CDN
+```
+
+**Database Schema**:
+```sql
+CREATE TABLE contents (
+    id BIGINT PRIMARY KEY,
+    slug VARCHAR(255),
+    url VARCHAR(512),
+    title VARCHAR(255),      -- Required for GEO
+    description TEXT,        -- Required for GEO
+    content MEDIUMTEXT,      -- Markdown content
+    status ENUM('draft', 'published'),
+    published_at DATETIME
+);
+```
+
+**Full Guide**: [docs/generic-backend-solution.md](docs/generic-backend-solution.md)
+
+**Advantages**:
+- ✅ Full control over content
+- ✅ Multi-tenant support
+- ✅ API-driven generation
+- ✅ Perfect for SaaS platforms
+
+---
+
+### Which Scenario Should You Use?
+
+| Your Situation | Recommended Scenario | Example |
+|---------------|---------------------|---------|
+| I have markdown files for my docs | Static Sites (Local Markdown) | VitePress, Docusaurus |
+| I have WordPress/Shopify site | Dynamic Sites (Firecrawl) | WordPress blog |
+| I need a custom content management system | Custom Backend Systems | SaaS platform |
+| I want the simplest setup | Static Sites (Local Markdown) | Personal blog |
+| I can't modify my website code | Dynamic Sites (Firecrawl) | Corporate website |
+| I need multi-language support | Custom Backend Systems | Enterprise platform |
+
 ## Changelog
 
 Please see [CHANGELOG.md](CHANGELOG.md) for recent changes.

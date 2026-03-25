@@ -1,5 +1,0 @@
-{
-  "installCommand": "cd ../.. && npm install && npm run build && cd demo/nuxt && npm install",
-  "buildCommand": "npx nuxi build",
-  "outputDirectory": ".output/public"
-}

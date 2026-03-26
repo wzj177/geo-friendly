@@ -24,6 +24,11 @@ class GeofriendlyConfig
     public ?OpenAIConfig $openai;
     /** @var array<string, mixed> */
     public array $firecrawl;
+    /**
+     * Content array for database-stored content
+     * @var array<int, array{title: string, url: string, content: string, description?: string, category?: string, tags?: array<string>}>
+     */
+    public array $contents;
 
     /**
      * @var array<string, bool>
@@ -59,12 +64,15 @@ class GeofriendlyConfig
         $this->schema = $config['schema'] ?? [];
         $this->og = $config['og'] ?? [];
 
+        // Content array support - for database-stored content
+        $this->contents = $config['contents'] ?? [];
+
         // Create Firecrawl config
         $firecrawlConfig = $config['firecrawl'] ?? [];
         $this->firecrawl = [
             'apiKey' => $firecrawlConfig['apiKey'] ?? '',
             'apiUrl' => $firecrawlConfig['apiUrl'] ?? 'https://api.firecrawl.dev/v1',
-            'enabled' => !empty($firecrawlConfig['apiKey']) ?? false,
+            'enabled' => !empty($firecrawlConfig['enabled']),
         ];
 
         // Create OpenAI config if provided
@@ -81,5 +89,13 @@ class GeofriendlyConfig
     public static function fromArray(array $config): self
     {
         return new self($config);
+    }
+
+    /**
+     * Check if content array is provided
+     */
+    public function hasContentArray(): bool
+    {
+        return !empty($this->contents);
     }
 }

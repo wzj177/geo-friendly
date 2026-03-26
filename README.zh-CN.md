@@ -1,580 +1,142 @@
 # Geo-Friendly
 
-[![Latest Stable Version](https://img.shields.io/packagist/v/wzj177/geo-friendly)](https://packagist.org/packages/wzj177/geo-friendly)
-[![Total Downloads](https://img.shields.io/packagist/dt/wzj177/geo-friendly)](https://packagist.org/packages/wzj177/geo-friendly)
-[![License](https://img.shields.io/packagist/l/wzj177/geo-friendly)](https://packagist.org/packages/wzj177/geo-friendly)
+[![Latest Version](https://img.shields.io/packagist/v/wzj177/geo-friendly)](https://packagist.org/packages/wzj177/geo-friendly)
 [![PHP Version](https://img.shields.io/php/v/wzj177/geo-friendly)](https://packagist.org/packages/wzj177/geo-friendly)
 
 PHP 生成式引擎优化（GEO）- 让您的网站可被 ChatGPT、Claude 和 Perplexity 等 AI 答案引擎发现。
 
-English | [简体中文](README.zh-CN.md)
+[English](README.md) | 简体中文
 
 ## 什么是 GEO？
 
-生成式引擎优化（GEO）是 SEO 的下一个演进阶段，专注于让您的内容可被 AI 驱动的答案引擎发现并以最佳格式呈现。此包帮助您生成 AI 引擎用于理解和索引您的网站所需的所有文件。
+GEO（生成式引擎优化）针对 AI 驱动的答案引擎优化内容。此包生成 AI 引擎用于理解和索引您的网站的标准文件。
 
 ## 特性
 
-- **AI 友好文件生成**：自动生成 AI 引擎偏好的文件
-  - `llms.txt` - LLM 的结构化内容（遵循 [llms-txt.org](https://llms-txt.org)）
-  - `llms-full.txt` - AI 训练的综合文档
-  - `robots.txt` - 增强的 AI 爬虫指令
-  - `sitemap.xml` - SEO 优化的站点地图
-  - `docs.json` - 结构化文档索引
-  - `ai-index.json` - AI 友好的内容索引
-  - `schema.json` - Schema.org 标记用于富搜索结果
-
-- **CLI 工具**：易用的命令行界面，包含多个命令
-- **灵活配置**：基于 YAML 的配置，完全可定制
-- **框架无关**：适用于任何 PHP 项目或框架
-- **平台集成**：现成的 WordPress、Shopify、Laravel 和 Symfony 集成
-- **审计和报告**：内置 GEO 分数计算器和详细报告
+- **AI 友好文件**：`llms.txt`、`llms-full.txt`、`robots.txt`、`sitemap.xml`、`docs.json`、`ai-index.json`、`schema.json`
+- **CLI 工具**：简单的命令行界面
+- **三种模式**：本地 Markdown 文件、Firecrawl API、内容数组（数据库）
+- **平台就绪**：WordPress、Shopify、Laravel、Symfony 集成
 
 ## 系统要求
 
-- PHP 7.4 或更高版本
+- PHP 7.4+
 - Composer
 - 扩展：`json`、`simplexml`、`yaml`
 
 ## 安装
 
-通过 Composer 安装：
-
 ```bash
 composer require wzj177/geo-friendly
-```
-
-或添加到您的 `composer.json`：
-
-```json
-{
-    "require": {
-        "wzj177/geo-friendly": "^1.0"
-    }
-}
-```
-
-安装后，您可以直接使用 CLI 工具：
-
-```bash
-# geo 命令现已可用
-vendor/bin/geo --version
 ```
 
 ## 快速开始
 
-### 使用 CLI 工具
-
-安装后，`geo` 命令将在您的 vendor bin 中可用：
+### 方式 1：CLI 工具（推荐用于静态站点）
 
 ```bash
-# 在项目根目录生成所有 GEO 文件
+# 创建配置文件
+vendor/bin/geo init
+
+# 编辑 geofriendly.yaml，然后生成
 vendor/bin/geo generate
-
-# 生成特定文件
-vendor/bin/geo generate:llms
-vendor/bin/geo generate:sitemap
-vendor/bin/geo generate:schema
-
-# 使用自定义输出目录生成
-vendor/bin/geo generate --output=./public
-
-# 使用自定义配置生成
-vendor/bin/geo generate --config=./geo-config.yaml
 ```
 
-### 编程方式使用
+**geofriendly.yaml**：
+```yaml
+title: '我的网站'
+url: 'https://example.com'
+contentDir: './content'  # 本地 markdown 文件
+outDir: './public'
+```
+
+### 方式 2：内容数组（用于数据库内容）
 
 ```php
-use GeoFriendly\GeoGenerator;
+use GeoFriendly\GeoFriendly;
 
-$generator = new GeoGenerator([
-    'site_url' => 'https://example.com',
-    'site_name' => '我的精彩网站',
-    'output_dir' => __DIR__ . '/public',
-]);
+$contents = [
+    [
+        'title' => '快速开始',
+        'url' => '/getting-started',
+        'content' => '# 快速开始\n\n这是内容...',
+        'description' => '学习如何开始',
+        'category' => '指南',
+    ],
+    [
+        'title' => 'API 参考',
+        'url' => '/api/reference',
+        'content' => '# API 参考\n\n...',
+        'description' => '完整的 API 文档',
+        'category' => 'API',
+    ],
+];
 
-// 生成所有文件
-$generator->generateAll();
+$config = [
+    'title' => '我的文档',
+    'url' => 'https://docs.example.com',
+    'outDir' => __DIR__ . '/public',
+    'contents' => $contents,  // 直接传入内容数组
+];
 
-// 或生成特定文件
-$generator->generateLlmsTxt();
-$generator->generateSitemap();
-$generator->generateSchema();
+$geo = new GeoFriendly($config);
+[$generated, $errors] = $geo->generate();
 ```
 
-## 配置
-
-### 内容模式
-
-Geo-Friendly 支持两种内容生成模式：
-
-1. **本地文件模式**（默认）- 从 `contentDir` 使用 markdown 文件
-2. **Firecrawl 模式**- 使用 Firecrawl API 爬取网站
-
-#### 本地文件模式
-
-最适合文档站点、博客，以及当您可以访问源 markdown 文件时：
-
-```yaml
-title: '我的文档'
-url: 'https://docs.example.com'
-contentDir: './content'
-```
-
-#### Firecrawl 模式
-
-最适合电商网站、企业网站，或需要爬取外部网站时：
+### 方式 3：Firecrawl（用于任何网站）
 
 ```yaml
 title: '我的商店'
 url: 'https://store.example.com'
-contentDir: ''  # 空值以使用 Firecrawl
+contentDir: ''  # 空值 = 使用 Firecrawl
 firecrawl:
-  apiKey: 'your-firecrawl-api-key'
-  apiUrl: 'https://api.firecrawl.dev/v1'
+  apiKey: 'your-api-key'
   enabled: true
-```
-
-**何时使用每种模式：**
-- **本地文件**：文档站点（Docusaurus、MkDocs）、博客（Hugo、Jekyll）、知识库
-- **Firecrawl**：电商网站、企业网站、SaaS 应用、动态内容
-
-详细信息请参阅[内容模式文档](docs/content-modes.md)。
-
-### 基本配置
-
-在项目根目录创建 `geofriendly.yaml` 文件：
-
-```yaml
-# 基本站点信息
-site_url: https://example.com
-site_name: 我的精彩网站
-site_description: 您网站的描述
-
-# 输出目录（相对于项目根目录）
-output_dir: ./public
-
-# 要生成的文件
-generate:
-  llms_txt: true
-  llms_full: true
-  robots_txt: true
-  sitemap_xml: true
-  docs_json: true
-  ai_index: true
-  schema_json: true
-
-# 内容源
-content_sources:
-  - ./docs/**/*.md
-  - ./src/**/*.php
-
-# 排除模式
-exclude:
-  - vendor/
-  - node_modules/
-  - tests/
-
-# AI 爬虫权限（用于 robots.txt）
-ai_crawlers:
-  GPTBot: allow
-  Google-Extended: allow
-  anthropic-ai: allow
-  PerplexityBot: allow
-```
-
-## CLI 命令
-
-`geo` CLI 工具提供管理 GEO 文件的全面功能：
-
-```bash
-# 生成所有 GEO 文件
-vendor/bin/geo generate
-
-# 生成特定文件类型
-vendor/bin/geo generate:llms          # 生成 llms.txt 和 llms-full.txt
-vendor/bin/geo generate:robots        # 生成 robots.txt
-vendor/bin/geo generate:sitemap       # 生成 sitemap.xml
-vendor/bin/geo generate:schema        # 生成 schema.json
-vendor/bin/geo generate:docs          # 生成 docs.json
-vendor/bin/geo generate:ai-index      # 生成 ai-index.json
-
-# 初始化配置
-vendor/bin/geo init                   # 在当前目录创建 geo-config.yaml
-
-# 验证配置
-vendor/bin/geo validate               # 验证 geo-config.yaml
-
-# 检查当前 GEO 状态
-vendor/bin/geo check                  # 分析当前站点并提供建议
-
-# 生成详细报告
-vendor/bin/geo report                 # 生成包含分数的综合 GEO 报告
-
-# 显示帮助
-vendor/bin/geo --help
-vendor/bin/geo generate --help        # 特定命令的帮助
-
-# 显示版本
-vendor/bin/geo --version
-```
-
-### 命令选项
-
-所有生成命令都支持这些选项：
-
-```bash
-# 自定义输出目录
-vendor/bin/geo generate --output=./public
-
-# 自定义配置文件
-vendor/bin/geo generate --config=./custom-config.yaml
-
-# 详细输出
-vendor/bin/geo generate --verbose
-
-# 试运行（预览更改而不写入）
-vendor/bin/geo generate --dry-run
 ```
 
 ## 生成的文件
 
-### llms.txt
+| 文件 | 用途 |
+|------|------|
+| `llms.txt` | LLM 发现（遵循 [llms-txt.org](https://llms-txt.org)） |
+| `llms-full.txt` | AI 训练的完整文档 |
+| `robots.txt` | AI 爬虫权限 |
+| `sitemap.xml` | SEO 站点地图 |
+| `docs.json` | 结构化文档索引 |
+| `ai-index.json` | AI 优化的内容索引 |
+| `schema.json` | Schema.org 结构化数据 |
 
-遵循 [llms-txt.org](https://llms-txt.org) 规范的结构化文件，为 AI 引擎提供您内容结构的信息。
+## CLI 命令
 
-```txt
-# 我的精彩网站
-Title: 我的精彩网站
-Description: 您网站的描述
-Version: 1.0.0
-
-## 文档
-- [入门指南](https://example.com/docs/getting-started.md)
-- [API 参考](https://example.com/docs/api.md)
-
-## 博客
-- [最新文章](https://example.com/blog/feed.xml)
+```bash
+vendor/bin/geo generate          # 生成所有文件
+vendor/bin/geo init             # 创建 geofriendly.yaml
+vendor/bin/geo check            # 审计 GEO 状态
+vendor/bin/geo report           # 生成详细报告
 ```
 
-### llms-full.txt
+## 内容数组格式
 
-包含完整文档内容的综合版本，用于 AI 训练数据。包括完整的文章内容、代码示例和针对 LLM 消费优化的详细描述。
-
-### robots.txt
-
-增强的 robots.txt，包含 AI 爬虫指令：
-
-```txt
-User-agent: *
-Allow: /
-
-# AI 爬虫
-User-agent: GPTBot
-Allow: /
-
-User-agent: Google-Extended
-Allow: /
-
-User-agent: anthropic-ai
-Allow: /
-
-User-agent: PerplexityBot
-Allow: /
-
-User-agent: Claude-Web
-Allow: /
-
-# 站点地图
-Sitemap: https://example.com/sitemap.xml
-```
-
-### sitemap.xml
-
-SEO 优化的 XML 站点地图，具有适当的优先级和更改频率。包含所有页面、文章和自定义文章类型及其元数据。
-
-### docs.json
-
-JSON 格式的结构化文档索引，提供文档结构的机器可读概览，具有层次化组织和元数据。
-
-### ai-index.json
-
-AI 友好的内容索引，将您的内容映射到最佳的 AI 发现格式，包括摘要、关键词和相关性分数。
-
-### schema.json
-
-用于富搜索结果的 Schema.org 结构化数据，包括 WebSite、WebPage、Article 和 Organization 模式及其完整元数据。
-
-## 高级用法
-
-### 自定义内容处理器
-
-您可以使用自定义内容处理器扩展生成器：
+从数据库传入内容时：
 
 ```php
-use GeoFriendly\Processor\ContentProcessorInterface;
-
-class CustomProcessor implements ContentProcessorInterface
-{
-    public function process(string $content, array $metadata): array
-    {
-        // 您的自定义处理逻辑
-        return [
-            'title' => $metadata['title'] ?? '',
-            'content' => strip_tags($content),
-            'summary' => substr($content, 0, 500),
-        ];
-    }
-}
-
-// 注册处理器
-$generator->addProcessor(new CustomProcessor());
+$contents = [
+    [
+        'title' => string,        // 必需：页面标题
+        'url' => string,          // 必需：页面 URL (如 /getting-started)
+        'content' => string,      // 必需：Markdown 内容
+        'description' => string,  // 可选：AI 友好描述 (9-10个词)
+        'category' => string,     // 可选：内容分类
+        'tags' => array,          // 可选：内容标签
+    ],
+    // ... 更多项目
+];
 ```
-
-### 框架集成
-
-**Laravel：**
-
-```php
-// 在命令或控制器中
-use GeoFriendly\GeoGenerator;
-
-class GenerateGeoCommand extends Command
-{
-    public function handle()
-    {
-        $generator = new GeoGenerator([
-            'site_url' => config('app.url'),
-            'site_name' => config('app.name'),
-            'output_dir' => public_path(),
-        ]);
-
-        $generator->generateAll();
-
-        $this->info('GEO 文件生成成功！');
-    }
-}
-```
-
-完整的 Laravel 集成包也可用：
-
-```bash
-# 安装 Laravel 服务提供者
-composer require wzj177/geo-friendly
-php artisan vendor:publish --provider="GeoFriendly\Laravel\GeoFriendlyServiceProvider"
-```
-
-参见 [examples/laravel](examples/laravel) 获取完整的 Laravel 集成，包括：
-- 服务提供者
-- Artisan 命令
-- 配置发布
-- 用于自动重新生成的中间件
-
-**Symfony：**
-
-```php
-// 在控制台命令中
-use GeoFriendly\GeoGenerator;
-
-class GenerateGeoCommand extends Command
-{
-    protected static $defaultName = 'geo:generate';
-
-    protected function execute(InputInterface $input, OutputInterface $output): int
-    {
-        $generator = new GeoGenerator([
-            'site_url' => $this->getParameter('router.request_context.host'),
-            'site_name' => $this->getParameter('app.name'),
-            'output_dir' => $this->getParameter('kernel.project_dir') . '/public',
-        ]);
-
-        $generator->generateAll();
-
-        return Command::SUCCESS;
-    }
-}
-```
-
-完整的 Symfony 包可在 [examples/symfony](examples/symfony) 获取，包含：
-- 包配置
-- 控制台命令
-- Twig 集成
-- 事件订阅者
-
-**WordPress：**
-
-WordPress 插件可在 [examples/wordpress-plugin](examples/wordpress-plugin) 获取，功能包括：
-- 自动 GEO 文件生成
-- 管理界面用于配置
-- 自定义设置页面
-- 与 WordPress cron 集成
-
-**Shopify：**
-
-Shopify 应用模板可在 [examples/shopify-app](examples/shopify-app) 获取，包含：
-- 主题应用扩展
-- 自动文件生成
-- 管理界面
-- 多语言支持
-
-## AI 增强
-
-该包包括用于内容优化的 AI 驱动功能：
-
-### AI 驱动的内容增强
-
-```php
-use GeoFriendly\GeoGenerator;
-use GeoFriendly\Enhancement\AiContentEnhancer;
-
-$generator = new GeoGenerator($config);
-$enhancer = new AiContentEnhancer($openaiApiKey);
-
-// 使用 AI 增强内容
-$enhancedContent = $enhancer->enhanceForLlm($originalContent, [
-    'add_context' => true,
-    'summarize' => true,
-    'extract_keywords' => true,
-]);
-
-// 生成 AI 优化的 llms.txt
-$generator->setEnhancer($enhancer);
-$generator->generateLlmsTxt();
-```
-
-### 功能
-
-- **内容摘要**：自动创建 AI 友好的摘要
-- **关键词提取**：提取相关关键词以便 AI 发现
-- **上下文增强**：添加上下文信息以改善 AI 理解
-- **模式生成**：为 AI 引擎生成优化的结构化数据
-
-## GEO 审计和报告
-
-该包包括审计您网站 GEO 准备情况的工具：
-
-```bash
-# 检查您网站的 GEO 状态
-vendor/bin/geo check --url=https://example.com
-
-# 生成详细报告
-vendor/bin/geo report --url=https://example.com --output=geo-report.html
-```
-
-### GEO 分数
-
-审计根据以下因素计算综合 GEO 分数（0-100）：
-
-- **llms.txt 存在**（20 分）
-- **Robots.txt AI 爬虫规则**（15 分）
-- **Schema.org 标记**（15 分）
-- **站点地图完整性**（10 分）
-- **内容结构**（20 分）
-- **元数据质量**（10 分）
-- **AI 友好格式**（10 分）
-
-## 测试
-
-运行测试套件：
-
-```bash
-composer test
-```
-
-运行特定测试套件：
-
-```bash
-# 仅单元测试
-vendor/bin/phpunit --testsuite=Unit
-
-# 集成测试
-vendor/bin/phpunit --testsuite=Integration
-
-# 功能测试
-vendor/bin/phpunit --testsuite=Feature
-```
-
-运行静态分析：
-
-```bash
-composer analyse
-```
-
-## 贡献
-
-欢迎贡献！请随时提交 Pull Request。
-
-### 开发设置
-
-```bash
-# 克隆仓库
-git clone https://github.com/wzj177/geo-friendly.git
-cd geo-friendly
-
-# 安装依赖
-composer install
-
-# 运行测试
-composer test
-
-# 运行分析
-composer analyse
-```
-
-## 许可证
-
-此包是根据 [MIT 许可证](LICENSE.md) 许可的开源软件。
-
-## 致谢
-
-- [Geo-Friendly 贡献者](https://github.com/wzj177/geo-friendly/graphs/contributors)
-- 从 GEO 社区获得灵感构建
-
-## 支持
-
-- **文档**：[完整文档](https://github.com/wzj177/geo-friendly/docs)
-- **问题**：[GitHub Issues](https://github.com/wzj177/geo-friendly/issues)
-- **讨论**：[GitHub Discussions](https://github.com/wzj177/geo-friendly/discussions)
-- **平台示例**：[examples/](examples/) 目录
-
-## 相关资源
-
-- [llms-txt.org](https://llms-txt.org) - LLMs.txt 文件规范
-- [Schema.org](https://schema.org) - 结构化数据标记
-- [Google 的 AI 爬虫](https://developers.google.com/search/docs/crawling-indexing/overview-google-crawlers)
-- [OpenAI 关于内容可发现性的文档](https://platform.openai.com/docs)
-- [Anthropic 的 Claude 文档](https://docs.anthropic.com)
-- [Perplexity AI 文档](https://docs.perplexity.ai)
 
 ## 使用场景
 
-Geo-Friendly 支持三种主要使用场景，根据你的项目类型选择：
+### 1. 静态站点 + Markdown（VitePress、Docusaurus、Hugo）
 
-### 1. 本地 Markdown 静态站点（推荐 Recommended）
-
-**适用于**: VitePress、Docusaurus、Hugo、Jekyll、MkDocs、GitBook
-
-你在 `content/` 目录中维护 markdown 文件，Geo-Friendly 从这些文件生成 GEO 文件。
-
-**示例**: [examples/vitepress-site](examples/vitepress-site)
-
-```bash
-# 项目结构
-my-docs/
-├── content/
-│   ├── index.md
-│   ├── getting-started.md
-│   └── api/
-│       └── reference.md
-├── geofriendly.yaml
-└── package.json
-
-# 生成 GEO 文件
-vendor/bin/geo generate
-```
-
-**配置**:
 ```yaml
 title: '我的文档'
 url: 'https://docs.example.com'
@@ -583,137 +145,54 @@ firecrawl:
   enabled: false
 ```
 
-**优势**:
-- ✅ 快速且免费（无需 API 调用）
-- ✅ 内容可版本控制
-- ✅ 支持离线使用
-- ✅ 非常适合技术文档
+**示例**：[examples/vitepress-site](examples/vitepress-site)
 
-**完整指南**: [docs/content-modes.zh-CN.md](docs/content-modes.zh-CN.md#本地文件模式)
+### 2. 动态站点（WordPress、Shopify）
 
----
-
-### 2. Firecrawl 爬虫动态站点（爬虫模式 Crawler Mode）
-
-**适用于**: WordPress、Shopify、WooCommerce、自定义 PHP 应用
-
-无需访问源文件，Firecrawl API 爬取你的实时网站并提取内容。
-
-**示例**: [examples/wordpress-firecrawl](examples/wordpress-firecrawl)
-
-```bash
-# 克隆示例
-git clone https://github.com/yourusername/geo-friendly.git
-cd geo-friendly/examples/wordpress-firecrawl
-
-# 配置环境
-cp .env.example .env
-# 编辑 .env 填入 WordPress URL 和 Firecrawl API key
-
-# 生成 GEO 文件
-composer generate
-```
-
-**配置**:
 ```yaml
 title: '我的 WordPress 站点'
 url: 'https://mysite.com'
-contentDir: ''  # 留空使用 Firecrawl
+contentDir: ''
 firecrawl:
   apiKey: '%env(FIRECRAWL_API_KEY)%'
   enabled: true
 ```
 
-**优势**:
-- ✅ 无需修改代码
-- ✅ 适用于任何 CMS
-- ✅ 自动内容提取
-- ✅ 易于设置
+**示例**：[examples/wordpress-firecrawl](examples/wordpress-firecrawl)
 
-**完整指南**: [docs/content-modes.zh-CN.md](docs/content-modes.zh-CN.md#firecrawl-模式)
+### 3. 自定义后台（SaaS、企业）
 
----
-
-### 3. 自定义后台系统（通用后台系统）
-
-**适用于**: SaaS 应用、企业平台、多租户系统
-
-你构建一个带 Markdown 编辑器的自定义管理面板来维护内容，然后使用 Geo-Friendly 编程生成 GEO 文件。
-
-**架构**:
-```
-管理面板 (Markdown 编辑器)
-    ↓
-数据库 (结构化内容)
-    ↓
-Geo-Friendly PHP 包
-    ↓
-GEO 文件 (llms.txt, sitemap.xml 等)
-    ↓
-AI 引擎 (ChatGPT、Claude、Perplexity)
-```
-
-**代码示例**:
 ```php
-use GeoFriendly\GeoFriendly;
+// 从数据库获取
+$contents = Content::where('status', 'published')
+    ->get()
+    ->map(fn($c) => [
+        'title' => $c->title,
+        'url' => $c->slug,
+        'content' => $c->markdown_content,
+        'description' => $c->description,
+    ])
+    ->toArray();
 
-// 1. 从数据库获取内容
-$contents = Content::where('status', 'published')->get();
-
-// 2. 准备配置
 $config = [
-    'title' => '我的 SaaS 平台',
+    'title' => '我的平台',
     'url' => 'https://app.example.com',
-    'contentDir' => $tempDir,  // 临时 markdown 文件
     'outDir' => storage_path('geo'),
+    'contents' => $contents,
 ];
 
-// 3. 生成
 $geo = new GeoFriendly($config);
 [$generated, $errors] = $geo->generate();
-
-// 4. 通过 API 提供或部署到 CDN
 ```
 
-**数据库设计**:
-```sql
-CREATE TABLE contents (
-    id BIGINT PRIMARY KEY,
-    slug VARCHAR(255),
-    url VARCHAR(512),
-    title VARCHAR(255),      -- GEO 必需
-    description TEXT,        -- GEO 必需
-    content MEDIUMTEXT,      -- Markdown 内容
-    status ENUM('draft', 'published'),
-    published_at DATETIME
-);
-```
+**完整指南**：[docs/generic-backend-solution.md](docs/generic-backend-solution.md)
 
-**完整指南**: [docs/generic-backend-solution.zh-CN.md](docs/generic-backend-solution.zh-CN.md)
+## 文档
 
-**优势**:
-- ✅ 完全控制内容
-- ✅ 支持多租户
-- ✅ API 驱动生成
-- ✅ 非常适合 SaaS 平台
+- [内容模式](docs/content-modes.md) - 本地文件 vs Firecrawl
+- [AI 集成](docs/AI-INTEGRATION.md) - OpenAI 增强
+- [后台方案](docs/generic-backend-solution.md) - 数据库集成
 
----
+## 许可证
 
-### 应该选择哪种场景？
-
-| 你的情况 | 推荐场景 | 示例 |
-|---------|---------|------|
-| 我有文档的 markdown 文件 | 静态站点（本地 Markdown） | VitePress、Docusaurus |
-| 我有 WordPress/Shopify 站点 | 动态站点（Firecrawl） | WordPress 博客 |
-| 我需要自定义内容管理系统 | 自定义后台系统 | SaaS 平台 |
-| 我想要最简单的设置 | 静态站点（本地 Markdown） | 个人博客 |
-| 我不能修改网站代码 | 动态站点（Firecrawl） | 企业网站 |
-| 我需要多语言支持 | 自定义后台系统 | 企业平台 |
-
-## 更新日志
-
-请参阅 [CHANGELOG.md](CHANGELOG.md) 了解最近的更改。
-
----
-
-用 ❤️ 为开源社区构建
+MIT

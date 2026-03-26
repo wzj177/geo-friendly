@@ -1,719 +1,199 @@
 # Geo-Friendly
 
-[![Latest Stable Version](https://img.shields.io/packagist/v/wzj177/geo-friendly)](https://packagist.org/packages/wzj177/geo-friendly)
-[![Total Downloads](https://img.shields.io/packagist/dt/wzj177/geo-friendly)](https://packagist.org/packages/wzj177/geo-friendly)
-[![License](https://img.shields.io/packagist/l/wzj177/geo-friendly)](https://packagist.org/packages/wzj177/geo-friendly)
+[![Latest Version](https://img.shields.io/packagist/v/wzj177/geo-friendly)](https://packagist.org/packages/wzj177/geo-friendly)
 [![PHP Version](https://img.shields.io/php/v/wzj177/geo-friendly)](https://packagist.org/packages/wzj177/geo-friendly)
 
 Generative Engine Optimization (GEO) for PHP - Make your website discoverable by AI answer engines like ChatGPT, Claude, and Perplexity.
 
-[简体中文](README.zh-CN.md) | English
+[简体中文文档](README.zh-CN.md)
 
 ## What is GEO?
 
-Generative Engine Optimization (GEO) is the next evolution of SEO, focusing on making your content discoverable and optimally formatted for AI-powered answer engines. This package helps you generate all the necessary files that AI engines use to understand and index your website.
+GEO (Generative Engine Optimization) optimizes content for AI-powered answer engines. This package generates standard files that AI engines use to understand and index your website.
 
 ## Features
 
-- **AI-Friendly File Generation**: Automatically generate files that AI engines prefer
-  - `llms.txt` - Structured content for LLMs (as per [llms-txt.org](https://llms-txt.org))
-  - `llms-full.txt` - Comprehensive documentation for AI training
-  - `robots.txt` - Enhanced with AI-crawler directives
-  - `sitemap.xml` - SEO-optimized sitemap
-  - `docs.json` - Structured documentation index
-  - `ai-index.json` - AI-friendly content index
-  - `schema.json` - Schema.org markup for rich results
-
-- **CLI Tool**: Easy-to-use command-line interface with multiple commands
-- **Flexible Configuration**: YAML-based configuration for full customization
-- **Framework Agnostic**: Works with any PHP project or framework
-- **Platform Integrations**: Ready-to-use integrations for WordPress, Shopify, Laravel, and Symfony
-- **Audit & Reporting**: Built-in GEO score calculator and detailed reporting
+- **AI-Friendly Files**: `llms.txt`, `llms-full.txt`, `robots.txt`, `sitemap.xml`, `docs.json`, `ai-index.json`, `schema.json`
+- **CLI Tool**: Simple command-line interface
+- **Two Modes**: Local markdown files OR Firecrawl API (for dynamic sites)
+- **Content Arrays**: Direct support for database-stored content
+- **Platform Ready**: WordPress, Shopify, Laravel, Symfony integrations
 
 ## Requirements
 
-- PHP 7.4 or higher
+- PHP 7.4+
 - Composer
 - Extensions: `json`, `simplexml`, `yaml`
 
 ## Installation
 
-Install the package via Composer:
-
 ```bash
 composer require wzj177/geo-friendly
-```
-
-Or add it to your `composer.json`:
-
-```json
-{
-    "require": {
-        "wzj177/geo-friendly": "^1.0"
-    }
-}
-```
-
-After installation, you can use the CLI tool directly:
-
-```bash
-# The geo command is now available
-vendor/bin/geo --version
 ```
 
 ## Quick Start
 
-### Using the CLI Tool
-
-After installation, the `geo` command will be available in your vendor bin:
+### Method 1: CLI Tool (Recommended for static sites)
 
 ```bash
-# Generate all GEO files in your project root
+# Create config file
+vendor/bin/geo init
+
+# Edit geofriendly.yaml, then generate
 vendor/bin/geo generate
-
-# Generate specific files
-vendor/bin/geo generate:llms
-vendor/bin/geo generate:sitemap
-vendor/bin/geo generate:schema
-
-# Generate with custom output directory
-vendor/bin/geo generate --output=./public
-
-# Generate with custom configuration
-vendor/bin/geo generate --config=./geo-config.yaml
 ```
 
-### Using Programmatically
+**geofriendly.yaml**:
+```yaml
+title: 'My Site'
+url: 'https://example.com'
+contentDir: './content'  # Local markdown files
+outDir: './public'
+```
+
+### Method 2: Content Arrays (For database content)
 
 ```php
-use GeoFriendly\GeoGenerator;
+use GeoFriendly\GeoFriendly;
 
-$generator = new GeoGenerator([
-    'site_url' => 'https://example.com',
-    'site_name' => 'My Awesome Site',
-    'output_dir' => __DIR__ . '/public',
-]);
+$contents = [
+    [
+        'title' => 'Getting Started',
+        'url' => '/getting-started',
+        'content' => '# Getting Started\n\nThis is the content...',
+        'description' => 'Learn how to get started',
+        'category' => 'guide',
+    ],
+    [
+        'title' => 'API Reference',
+        'url' => '/api/reference',
+        'content' => '# API Reference\n\n...',
+        'description' => 'Complete API documentation',
+        'category' => 'api',
+    ],
+];
 
-// Generate all files
-$generator->generateAll();
+$config = [
+    'title' => 'My Documentation',
+    'url' => 'https://docs.example.com',
+    'outDir' => __DIR__ . '/public',
+    'contents' => $contents,  // Pass content array
+];
 
-// Or generate specific files
-$generator->generateLlmsTxt();
-$generator->generateSitemap();
-$generator->generateSchema();
+$geo = new GeoFriendly($config);
+[$generated, $errors] = $geo->generate();
 ```
 
-## Configuration
-
-### Content Modes
-
-Geo-Friendly supports two modes for content generation:
-
-1. **Local Files Mode** (default) - Uses markdown files from your `contentDir`
-2. **Firecrawl Mode** - Crawls websites using the Firecrawl API
-
-#### Local Files Mode
-
-Best for documentation sites, blogs, and when you have access to source markdown files:
-
-```yaml
-title: 'My Documentation'
-url: 'https://docs.example.com'
-contentDir: './content'
-```
-
-#### Firecrawl Mode
-
-Best for e-commerce sites, corporate websites, or when you need to crawl external sites:
+### Method 3: Firecrawl (For any website)
 
 ```yaml
 title: 'My Store'
 url: 'https://store.example.com'
-contentDir: ''  # Empty to use Firecrawl
+contentDir: ''  # Empty = use Firecrawl
 firecrawl:
-  apiKey: 'your-firecrawl-api-key'
-  apiUrl: 'https://api.firecrawl.dev/v1'
+  apiKey: 'your-api-key'
   enabled: true
-```
-
-**When to use each mode:**
-- **Local Files**: Documentation sites (Docusaurus, MkDocs), blogs (Hugo, Jekyll), knowledge bases
-- **Firecrawl**: E-commerce sites, corporate websites, SaaS applications, dynamic content
-
-For detailed information, see [Content Modes Documentation](docs/content-modes.md).
-
-### Basic Configuration
-
-Create a `geofriendly.yaml` file in your project root:
-
-```yaml
-# Basic site information
-site_url: https://example.com
-site_name: My Awesome Site
-site_description: A description of your site
-
-# Output directory (relative to project root)
-output_dir: ./public
-
-# Files to generate
-generate:
-  llms_txt: true
-  llms_full: true
-  robots_txt: true
-  sitemap_xml: true
-  docs_json: true
-  ai_index: true
-  schema_json: true
-
-# Content sources
-content_sources:
-  - ./docs/**/*.md
-  - ./src/**/*.php
-
-# Exclude patterns
-exclude:
-  - vendor/
-  - node_modules/
-  - tests/
-
-# AI crawler permissions (for robots.txt)
-ai_crawlers:
-  GPTBot: allow
-  Google-Extended: allow
-  anthropic-ai: allow
-  PerplexityBot: allow
 ```
 
 ## Generated Files
 
-### llms.txt
-
-A structured file following the [llms-txt.org](https://llms-txt.org) specification that provides AI engines with information about your content structure.
-
-```txt
-# My Awesome Site
-Title: My Awesome Site
-Description: A description of your site
-Version: 1.0.0
-
-## Documentation
-- [Getting Started](https://example.com/docs/getting-started.md)
-- [API Reference](https://example.com/docs/api.md)
-
-## Blog
-- [Latest Posts](https://example.com/blog/feed.xml)
-```
-
-### llms-full.txt
-
-Comprehensive version containing full documentation content for AI training data. Includes complete article content, code examples, and detailed descriptions optimized for LLM consumption.
-
-### robots.txt
-
-Enhanced robots.txt with directives for AI crawlers:
-
-```txt
-User-agent: *
-Allow: /
-
-# AI Crawlers
-User-agent: GPTBot
-Allow: /
-
-User-agent: Google-Extended
-Allow: /
-
-User-agent: anthropic-ai
-Allow: /
-
-User-agent: PerplexityBot
-Allow: /
-
-User-agent: Claude-Web
-Allow: /
-
-# Sitemap
-Sitemap: https://example.com/sitemap.xml
-```
-
-### sitemap.xml
-
-SEO-optimized XML sitemap with proper priorities and change frequencies. Includes all pages, posts, and custom post types with appropriate metadata.
-
-### docs.json
-
-Structured documentation index in JSON format, providing a machine-readable overview of your documentation structure with hierarchical organization and metadata.
-
-### ai-index.json
-
-AI-friendly content index that maps your content to optimal AI discovery formats, including summaries, keywords, and relevance scores.
-
-### schema.json
-
-Schema.org structured data for rich search results, including WebSite, WebPage, Article, and Organization schemas with complete metadata.
+| File | Purpose |
+|------|---------|
+| `llms.txt` | LLM discovery (per [llms-txt.org](https://llms-txt.org)) |
+| `llms-full.txt` | Complete documentation for AI training |
+| `robots.txt` | AI crawler permissions |
+| `sitemap.xml` | SEO sitemap |
+| `docs.json` | Structured documentation index |
+| `ai-index.json` | AI-optimized content index |
+| `schema.json` | Schema.org structured data |
 
 ## CLI Commands
 
-The `geo` CLI tool provides comprehensive functionality for managing your GEO files:
-
 ```bash
-# Generate all GEO files
-vendor/bin/geo generate
-
-# Generate specific file types
-vendor/bin/geo generate:llms          # Generate llms.txt and llms-full.txt
-vendor/bin/geo generate:robots        # Generate robots.txt
-vendor/bin/geo generate:sitemap       # Generate sitemap.xml
-vendor/bin/geo generate:schema        # Generate schema.json
-vendor/bin/geo generate:docs          # Generate docs.json
-vendor/bin/geo generate:ai-index      # Generate ai-index.json
-
-# Initialize configuration
-vendor/bin/geo init                   # Create geo-config.yaml in current directory
-
-# Validate configuration
-vendor/bin/geo validate               # Validate geo-config.yaml
-
-# Check current GEO status
-vendor/bin/geo check                  # Analyze current site and provide recommendations
-
-# Generate detailed report
-vendor/bin/geo report                 # Generate comprehensive GEO report with scores
-
-# Show help
-vendor/bin/geo --help
-vendor/bin/geo generate --help        # Help for specific command
-
-# Show version
-vendor/bin/geo --version
+vendor/bin/geo generate          # Generate all files
+vendor/bin/geo init             # Create geofriendly.yaml
+vendor/bin/geo check            # Audit GEO status
+vendor/bin/geo report           # Generate detailed report
 ```
 
-### Command Options
+## Content Array Format
 
-All generate commands support these options:
-
-```bash
-# Custom output directory
-vendor/bin/geo generate --output=./public
-
-# Custom configuration file
-vendor/bin/geo generate --config=./custom-config.yaml
-
-# Verbose output
-vendor/bin/geo generate --verbose
-
-# Dry run (preview changes without writing)
-vendor/bin/geo generate --dry-run
-```
-
-## Advanced Usage
-
-### Custom Content Processors
-
-You can extend the generator with custom content processors:
+When passing content from database:
 
 ```php
-use GeoFriendly\Processor\ContentProcessorInterface;
-
-class CustomProcessor implements ContentProcessorInterface
-{
-    public function process(string $content, array $metadata): array
-    {
-        // Your custom processing logic
-        return [
-            'title' => $metadata['title'] ?? '',
-            'content' => strip_tags($content),
-            'summary' => substr($content, 0, 500),
-        ];
-    }
-}
-
-// Register the processor
-$generator->addProcessor(new CustomProcessor());
+$contents = [
+    [
+        'title' => string,        // Required: Page title
+        'url' => string,          // Required: Page URL (e.g., '/getting-started')
+        'content' => string,      // Required: Markdown content
+        'description' => string,  // Optional: AI-friendly description (9-10 words)
+        'category' => string,     // Optional: Content category
+        'tags' => array,          // Optional: Content tags
+    ],
+    // ... more items
+];
 ```
-
-### Integration with Frameworks
-
-**Laravel:**
-
-```php
-// In a command or controller
-use GeoFriendly\GeoGenerator;
-
-class GenerateGeoCommand extends Command
-{
-    public function handle()
-    {
-        $generator = new GeoGenerator([
-            'site_url' => config('app.url'),
-            'site_name' => config('app.name'),
-            'output_dir' => public_path(),
-        ]);
-
-        $generator->generateAll();
-
-        $this->info('GEO files generated successfully!');
-    }
-}
-```
-
-A complete Laravel integration package is also available:
-
-```bash
-# Install the Laravel service provider
-composer require wzj177/geo-friendly
-php artisan vendor:publish --provider="GeoFriendly\Laravel\GeoFriendlyServiceProvider"
-```
-
-See [examples/laravel](examples/laravel) for complete Laravel integration including:
-- Service Provider
-- Artisan Commands
-- Configuration publishing
-- Middleware for automatic regeneration
-
-**Symfony:**
-
-```php
-// In a console command
-use GeoFriendly\GeoGenerator;
-
-class GenerateGeoCommand extends Command
-{
-    protected static $defaultName = 'geo:generate';
-
-    protected function execute(InputInterface $input, OutputInterface $output): int
-    {
-        $generator = new GeoGenerator([
-            'site_url' => $this->getParameter('router.request_context.host'),
-            'site_name' => $this->getParameter('app.name'),
-            'output_dir' => $this->getParameter('kernel.project_dir') . '/public',
-        ]);
-
-        $generator->generateAll();
-
-        return Command::SUCCESS;
-    }
-}
-```
-
-A complete Symfony bundle is available at [examples/symfony](examples/symfony) with:
-- Bundle configuration
-- Console commands
-- Twig integration
-- Event subscribers
-
-**WordPress:**
-
-A WordPress plugin is available at [examples/wordpress-plugin](examples/wordpress-plugin) featuring:
-- Automatic GEO file generation
-- Admin interface for configuration
-- Settings page for customization
-- Integration with WordPress cron
-
-**Shopify:**
-
-A Shopify app template is available at [examples/shopify-app](examples/shopify-app) with:
-- Theme app extension
-- Automatic file generation
-- Admin interface
-- Multi-language support
-
-## AI Enhancement
-
-The package includes AI-powered capabilities for content optimization:
-
-### AI-Powered Content Enhancement
-
-```php
-use GeoFriendly\GeoGenerator;
-use GeoFriendly\Enhancement\AiContentEnhancer;
-
-$generator = new GeoGenerator($config);
-$enhancer = new AiContentEnhancer($openaiApiKey);
-
-// Enhance content with AI
-$enhancedContent = $enhancer->enhanceForLlm($originalContent, [
-    'add_context' => true,
-    'summarize' => true,
-    'extract_keywords' => true,
-]);
-
-// Generate AI-optimized llms.txt
-$generator->setEnhancer($enhancer);
-$generator->generateLlmsTxt();
-```
-
-### Features
-
-- **Content Summarization**: Automatically create AI-friendly summaries
-- **Keyword Extraction**: Extract relevant keywords for AI discovery
-- **Context Enhancement**: Add contextual information for better AI understanding
-- **Schema Generation**: Generate structured data optimized for AI engines
-
-## GEO Audit & Reporting
-
-The package includes tools to audit your site's GEO readiness:
-
-```bash
-# Check your site's GEO status
-vendor/bin/geo check --url=https://example.com
-
-# Generate detailed report
-vendor/bin/geo report --url=https://example.com --output=geo-report.html
-```
-
-### GEO Score
-
-The audit calculates a comprehensive GEO score (0-100) based on:
-
-- **llms.txt Presence** (20 points)
-- **Robots.txt AI Crawler Rules** (15 points)
-- **Schema.org Markup** (15 points)
-- **Sitemap Completeness** (10 points)
-- **Content Structure** (20 points)
-- **Metadata Quality** (10 points)
-- **AI-Friendly Formatting** (10 points)
-
-## Testing
-
-Run the test suite:
-
-```bash
-composer test
-```
-
-Run specific test suites:
-
-```bash
-# Unit tests only
-vendor/bin/phpunit --testsuite=Unit
-
-# Integration tests
-vendor/bin/phpunit --testsuite=Integration
-
-# Feature tests
-vendor/bin/phpunit --testsuite=Feature
-```
-
-Run static analysis:
-
-```bash
-composer analyse
-```
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-### Development Setup
-
-```bash
-# Clone the repository
-git clone https://github.com/wzj177/geo-friendly.git
-cd geo-friendly
-
-# Install dependencies
-composer install
-
-# Run tests
-composer test
-
-# Run analysis
-composer analyse
-```
-
-## License
-
-This package is open-sourced software licensed under the [MIT license](LICENSE.md).
-
-## Credits
-
-- [Geo-Friendly Contributors](https://github.com/wzj177/geo-friendly/graphs/contributors)
-- Built with inspiration from the GEO community
-
-## Support
-
-- **Documentation**: [Full Documentation](https://github.com/wzj177/geo-friendly/docs)
-- **Issues**: [GitHub Issues](https://github.com/wzj177/geo-friendly/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/wzj177/geo-friendly/discussions)
-- **Platform Examples**: [examples/](examples/) directory
-
-## Related Resources
-
-- [llms-txt.org](https://llms-txt.org) - The specification for LLMs.txt files
-- [Schema.org](https://schema.org) - Structured data markup
-- [Google's AI Crawlers](https://developers.google.com/search/docs/crawling-indexing/overview-google-crawlers)
-- [OpenAI's documentation on making content discoverable](https://platform.openai.com/docs)
-- [Anthropic's Claude documentation](https://docs.anthropic.com)
-- [Perplexity AI documentation](https://docs.perplexity.ai)
 
 ## Usage Scenarios
 
-Geo-Friendly supports three main usage scenarios depending on your project type:
+### 1. Static Sites with Markdown (VitePress, Docusaurus, Hugo)
 
-### 1. Static Sites with Local Markdown (推荐 Recommended)
-
-**Best for**: VitePress, Docusaurus, Hugo, Jekyll, MkDocs, GitBook
-
-You maintain markdown files in a `content/` directory, and Geo-Friendly generates GEO files from them.
-
-**Example**: [examples/vitepress-site](examples/vitepress-site)
-
-```bash
-# Your project structure
-my-docs/
-├── content/
-│   ├── index.md
-│   ├── getting-started.md
-│   └── api/
-│       └── reference.md
-├── geofriendly.yaml
-└── package.json
-
-# Generate GEO files
-vendor/bin/geo generate
-```
-
-**Configuration**:
 ```yaml
-title: 'My Documentation'
+title: 'My Docs'
 url: 'https://docs.example.com'
 contentDir: './content'
 firecrawl:
   enabled: false
 ```
 
-**Advantages**:
-- ✅ Fast and free (no API calls)
-- ✅ Version control for content
-- ✅ Works offline
-- ✅ Perfect for technical documentation
+**Example**: [examples/vitepress-site](examples/vitepress-site)
 
-**Full Guide**: [docs/content-modes.md](docs/content-modes.md#local-files-mode)
+### 2. Dynamic Sites (WordPress, Shopify)
 
----
-
-### 2. Dynamic Sites with Firecrawl (爬虫模式 Crawler Mode)
-
-**Best for**: WordPress, Shopify, WooCommerce, custom PHP apps
-
-You don't need access to source files. Firecrawl API crawls your live website and extracts content.
-
-**Example**: [examples/wordpress-firecrawl](examples/wordpress-firecrawl)
-
-```bash
-# Clone the example
-git clone https://github.com/yourusername/geo-friendly.git
-cd geo-friendly/examples/wordpress-firecrawl
-
-# Configure environment
-cp .env.example .env
-# Edit .env with your WordPress URL and Firecrawl API key
-
-# Generate GEO files
-composer generate
-```
-
-**Configuration**:
 ```yaml
 title: 'My WordPress Site'
 url: 'https://mysite.com'
-contentDir: ''  # Empty to use Firecrawl
+contentDir: ''
 firecrawl:
   apiKey: '%env(FIRECRAWL_API_KEY)%'
   enabled: true
 ```
 
-**Advantages**:
-- ✅ No code changes needed
-- ✅ Works with any CMS
-- ✅ Automatic content extraction
-- ✅ Easy to set up
+**Example**: [examples/wordpress-firecrawl](examples/wordpress-firecrawl)
 
-**Full Guide**: [docs/content-modes.md](docs/content-modes.md#firecrawl-mode)
+### 3. Custom Backend (SaaS, Enterprise)
 
----
-
-### 3. Custom Backend Systems (通用后台系统)
-
-**Best for**: SaaS applications, enterprise platforms, multi-tenant systems
-
-You build a custom admin panel with a Markdown editor to maintain content, then use Geo-Friendly programmatically to generate GEO files.
-
-**Architecture**:
-```
-Admin Panel (Markdown Editor)
-    ↓
-Database (structured content)
-    ↓
-Geo-Friendly PHP Package
-    ↓
-GEO Files (llms.txt, sitemap.xml, etc.)
-    ↓
-AI Engines (ChatGPT, Claude, Perplexity)
-```
-
-**Code Example**:
 ```php
-use GeoFriendly\GeoFriendly;
+// Fetch from database
+$contents = Content::where('status', 'published')
+    ->get()
+    ->map(fn($c) => [
+        'title' => $c->title,
+        'url' => $c->slug,
+        'content' => $c->markdown_content,
+        'description' => $c->description,
+    ])
+    ->toArray();
 
-// 1. Fetch content from database
-$contents = Content::where('status', 'published')->get();
-
-// 2. Prepare config
 $config = [
-    'title' => 'My SaaS Platform',
+    'title' => 'My Platform',
     'url' => 'https://app.example.com',
-    'contentDir' => $tempDir,  // Temp markdown files
     'outDir' => storage_path('geo'),
+    'contents' => $contents,
 ];
 
-// 3. Generate
 $geo = new GeoFriendly($config);
 [$generated, $errors] = $geo->generate();
-
-// 4. Serve via API or deploy to CDN
-```
-
-**Database Schema**:
-```sql
-CREATE TABLE contents (
-    id BIGINT PRIMARY KEY,
-    slug VARCHAR(255),
-    url VARCHAR(512),
-    title VARCHAR(255),      -- Required for GEO
-    description TEXT,        -- Required for GEO
-    content MEDIUMTEXT,      -- Markdown content
-    status ENUM('draft', 'published'),
-    published_at DATETIME
-);
 ```
 
 **Full Guide**: [docs/generic-backend-solution.md](docs/generic-backend-solution.md)
 
-**Advantages**:
-- ✅ Full control over content
-- ✅ Multi-tenant support
-- ✅ API-driven generation
-- ✅ Perfect for SaaS platforms
+## Documentation
 
----
+- [Content Modes](docs/content-modes.md) - Local files vs Firecrawl
+- [AI Integration](docs/AI-INTEGRATION.md) - OpenAI enhancement
+- [Backend Solution](docs/generic-backend-solution.md) - Database integration
 
-### Which Scenario Should You Use?
+## License
 
-| Your Situation | Recommended Scenario | Example |
-|---------------|---------------------|---------|
-| I have markdown files for my docs | Static Sites (Local Markdown) | VitePress, Docusaurus |
-| I have WordPress/Shopify site | Dynamic Sites (Firecrawl) | WordPress blog |
-| I need a custom content management system | Custom Backend Systems | SaaS platform |
-| I want the simplest setup | Static Sites (Local Markdown) | Personal blog |
-| I can't modify my website code | Dynamic Sites (Firecrawl) | Corporate website |
-| I need multi-language support | Custom Backend Systems | Enterprise platform |
-
-## Changelog
-
-Please see [CHANGELOG.md](CHANGELOG.md) for recent changes.
-
----
-
-Made with ❤️ for the open-source community
+MIT

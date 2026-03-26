@@ -104,6 +104,106 @@ class FileHelper
     }
 
     /**
+     * Process content array from database.
+     *
+     * @param array<int, array{title: string, url: string, content: string, description?: string, category?: string, tags?: array<string>}> $contents
+     * @return array<string, array{title: string, content: string, url: string, relativePath: string, description: string|null, category: string|null, tags: array<string>}>
+     */
+    public static function processContentArray(array $contents): array
+    {
+        $processed = [];
+
+        foreach ($contents as $item) {
+            // Validate required fields
+            if (empty($item['title']) || empty($item['url']) || empty($item['content'])) {
+                continue;
+            }
+
+            // Generate relative path from URL
+            $relativePath = self::urlToPath($item['url']);
+
+            $processed[] = [
+                'title' => $item['title'],
+                'content' => $item['content'],
+                'url' => $item['url'],
+                'relativePath' => $relativePath,
+                'description' => $item['description'] ?? null,
+                'category' => $item['category'] ?? null,
+                'tags' => $item['tags'] ?? [],
+            ];
+        }
+
+        return $processed;
+    }
+
+    /**
+     * Convert URL to file path.
+     *
+     * @param string $url The URL to convert
+     * @return string The file path
+     */
+    private static function urlToPath(string $url): string
+    {
+        // Remove query string and fragment
+        $url = preg_replace('/[?#].*$/', '', $url);
+
+        // Remove leading slash
+        $path = ltrim($url, '/');
+
+        // If path is empty or ends with slash, use index
+        if (empty($path) || substr($path, -1) === '/') {
+            return 'index.md';
+        }
+
+        // Add .md extension if not present
+        if (!self::strEndsWith($path, '.md') && !self::strEndsWith($path, '.mdx')) {
+            $path .= '.md';
+        }
+
+        return $path;
+    }
+
+    /**
+     * Collect content from both files and array.
+     *
+     * @param GeofriendlyConfig $config The configuration object
+     * @return array<string, array{title: string, content: string, url: string, relativePath: string, description: string|null, category: string|null, tags: array<string>}>
+     */
+    public static function collectContent(GeofriendlyConfig $config): array
+    {
+        // If content array is provided, use it
+        if ($config->hasContentArray()) {
+            return self::processContentArray($config->contents);
+        }
+
+        // Otherwise, collect from markdown files
+        $files = self::collectMarkdownFiles($config->contentDir);
+
+        // Convert file info to content format
+        $content = [];
+        foreach ($files as $file) {
+            $fileContent = file_get_contents($file['path']);
+            if ($fileContent === false) {
+                continue;
+            }
+
+            $frontmatter = self::parseFrontmatter($fileContent);
+
+            $content[] = [
+                'title' => $file['title'],
+                'content' => $fileContent,
+                'url' => '/' . str_replace(['.md', '.mdx'], '', $file['relativePath']),
+                'relativePath' => $file['relativePath'],
+                'description' => $frontmatter['description'] ?? null,
+                'category' => $frontmatter['category'] ?? null,
+                'tags' => $frontmatter['tags'] ?? [],
+            ];
+        }
+
+        return $content;
+    }
+
+    /**
      * Parse YAML frontmatter from content.
      *
      * @param string $content The file content

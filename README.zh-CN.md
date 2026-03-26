@@ -189,8 +189,8 @@ $geo = new GeoFriendly($config);
 
 ## 文档
 
-- [内容模式](docs/content-modes.md) - 本地文件 vs Firecrawl
-- [AI 集成](docs/AI-INTEGRATION.md) - OpenAI 增强
+- [内容模式](docs/content-modes.zh-CN.md) - 本地文件 vs Firecrawl
+- [AI 集成](docs/AI-INTEGRATION.zh-CN.md) - OpenAI 增强
 - [后台方案](docs/generic-backend-solution.md) - 数据库集成
 
 ## 许可证
